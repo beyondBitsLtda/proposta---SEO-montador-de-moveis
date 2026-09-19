@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#050508">
 <meta name="color-scheme" content="dark">
-<meta name="description" content="Proposta de parceria técnica em SEO e performance web — Beyond Bits">
-<title>Proposta · SEO e Performance Web</title>
+<title>Painel SEO · Montador de Móveis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═════════ TOKENS ═════════ */
+/* ═════════ TOKENS — mesma identidade do painel original ═════════ */
 :root{
   --bg:#050508;
   --surface:rgba(14,14,28,.95);
+  --surface-2:rgba(232,232,230,.05);
   --ink:#e8e8e6;
   --ink-2:rgba(232,232,230,.55);
   --ink-3:rgba(232,232,230,.35);
@@ -24,962 +24,1442 @@
   --copper:#bf00ff;
   --copper-dim:rgba(191,0,255,.15);
   --copper-glow:rgba(191,0,255,.3);
-  --gold:#e8c87a;
 
-  --ok:#2ecc71;
-  --ok-dim:rgba(46,204,113,.10);
-  --ok-line:rgba(46,204,113,.22);
+  --ok:#2ecc71;    --ok-dim:rgba(46,204,113,.12);
+  --run:#bf00ff;   --run-dim:rgba(191,0,255,.14);
+  --late:#e74c3c;  --late-dim:rgba(231,76,60,.12);
+  --plan:#f39c12;  --plan-dim:rgba(243,156,18,.12);
+  --none:rgba(232,232,230,.35); --none-dim:rgba(232,232,230,.06);
 
   --font-hero:'Bebas Neue', Impact, sans-serif;
   --font-mono:'Space Mono', ui-monospace, monospace;
   --font-body:'Rajdhani', system-ui, sans-serif;
 
   --pad:20px;
+  --tabbar:calc(60px + env(safe-area-inset-bottom));
 }
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+html{-webkit-text-size-adjust:100%}
 body{
-  background:var(--bg);color:var(--ink);
-  font-family:var(--font-body);font-weight:400;font-size:16px;line-height:1.5;
-  min-height:100dvh;overflow-x:hidden;
+  background:var(--bg); color:var(--ink);
+  font-family:var(--font-body); font-weight:400; font-size:16px; line-height:1.5;
+  min-height:100dvh; overflow-x:hidden;
+  padding-bottom:calc(var(--tabbar) + 8px);
 }
 body::before{
-  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.35;
+  content:''; position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:.35;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 }
 body::after{
-  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
   background:
-    radial-gradient(ellipse 60% 50% at 75% 10%, rgba(40,10,70,.35) 0%, transparent 62%),
-    radial-gradient(ellipse 80% 60% at 15% 85%, rgba(5,8,30,.3) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 50% at 70% 15%, rgba(15,20,60,.3) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(5,8,30,.25) 0%, transparent 60%);
 }
-button,input{font:inherit;color:inherit}
+button,input,select{font:inherit;color:inherit}
 button{background:none;border:none;cursor:pointer}
 a{color:var(--copper);text-decoration:none}
 ::selection{background:var(--copper);color:#050508}
 
-.wrap{width:100%;max-width:940px;margin:0 auto;padding:0 var(--pad)}
+/* rótulo mono — usado em toda a interface */
+.mono{font-family:var(--font-mono);letter-spacing:.15em;text-transform:uppercase}
 
-/* ═════════ PROGRESSO DE LEITURA ═════════ */
-#scrollbar{
-  position:fixed;top:0;left:0;height:2px;width:0;z-index:300;
-  background:linear-gradient(90deg,var(--copper),var(--gold));
-  box-shadow:0 0 10px var(--copper-glow);
-}
+.wrap{width:100%;max-width:1400px;margin:0 auto;padding:0 var(--pad)}
 
-/* ═════════ NAV ═════════ */
-.nav{
-  position:sticky;top:0;z-index:200;
-  background:color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+/* ═════════ TOPO ═════════ */
+.topbar{
+  position:sticky; top:0; z-index:60;
+  background:color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--line);
   padding-top:env(safe-area-inset-top);
 }
-.nav-in{display:flex;align-items:center;gap:14px;height:56px}
-.logo{display:flex;align-items:center;gap:10px;flex:0 0 auto}
-.logo-mark{
-  width:26px;height:26px;border-radius:6px;background:var(--copper);color:#050508;
-  display:grid;place-items:center;font-family:var(--font-hero);font-size:.85rem;
+.topbar-in{display:flex;align-items:center;gap:12px;height:58px}
+.mark{
+  min-width:28px;height:28px;flex:0 0 auto;padding:0 7px;border-radius:6px;
+  background:var(--copper);color:#050508;
+  display:grid;place-items:center;
+  font-family:var(--font-hero);font-size:.9rem;letter-spacing:.08em;white-space:nowrap;
 }
-.logo-txt{font-family:var(--font-hero);font-size:1rem;letter-spacing:.14em;white-space:nowrap}
-.nav-links{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;justify-content:flex-start;margin-left:auto}
-.nav-links::-webkit-scrollbar{display:none}
-.nav-links a{
-  flex:0 0 auto;padding:7px 12px;border-radius:5px;border:1px solid transparent;
-  font-family:var(--font-mono);font-size:.5rem;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--ink-3);white-space:nowrap;transition:.3s;
+.top-titles{min-width:0;flex:1}
+.top-title{
+  font-family:var(--font-hero);font-size:1.05rem;letter-spacing:.12em;line-height:1.15;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.nav-links a:hover{color:var(--ink)}
-.nav-links a.on{color:var(--copper);border-color:var(--copper);background:var(--copper-dim)}
+.top-sub{
+  font-family:var(--font-mono);font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink-3);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.icon-btn{
+  width:38px;height:38px;flex:0 0 38px;border-radius:8px;
+  border:1px solid var(--line);background:transparent;
+  display:grid;place-items:center;color:var(--ink-3);transition:.3s;
+}
+.icon-btn:hover{border-color:var(--copper);color:var(--copper)}
+.icon-btn:active{transform:scale(.94)}
+.icon-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ═════════ VIEWS ═════════ */
+.view{display:none;padding-top:26px;animation:rise .6s cubic-bezier(.16,1,.3,1) both}
+.view.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
 /* ═════════ HERO ═════════ */
-.hero{padding:56px 0 44px;border-bottom:1px solid var(--line)}
+.hero{margin-bottom:30px;padding-bottom:24px;border-bottom:1px solid var(--line)}
 .eyebrow{
   display:inline-flex;align-items:center;gap:9px;
-  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.24em;text-transform:uppercase;
-  color:var(--copper);margin-bottom:18px;
+  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--copper);margin-bottom:12px;
 }
-.eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--copper);animation:pulse 2s ease-in-out infinite}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--copper);flex:0 0 6px}
+.dot.live{animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
-.hero h1{
-  font-family:var(--font-hero);font-size:clamp(3rem,13vw,6rem);font-weight:400;
-  letter-spacing:.03em;line-height:.92;margin-bottom:20px;
+h1{
+  font-family:var(--font-hero);font-size:clamp(2.4rem,10vw,4rem);
+  letter-spacing:.04em;line-height:1;margin-bottom:14px;font-weight:400;
 }
-.hero h1 em{font-style:normal;color:var(--copper);display:block}
-.hero-sub{font-size:1.1rem;font-weight:300;color:var(--ink-2);max-width:56ch;line-height:1.6;margin-bottom:28px}
-.hero-sub strong{color:var(--ink);font-weight:600}
-.hero-meta{display:flex;flex-wrap:wrap;gap:10px}
-.meta-chip{
-  display:flex;flex-direction:column;gap:4px;padding:12px 16px;
-  border:1px solid var(--line);border-radius:8px;background:var(--surface);
-}
-.meta-chip b{font-family:var(--font-mono);font-size:.46rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:400}
-.meta-chip span{font-size:.92rem;font-weight:600}
+.hero-desc{font-size:1rem;font-weight:300;color:var(--ink-2);max-width:700px;line-height:1.6}
 
-/* ═════════ SEÇÕES ═════════ */
-.sec{padding:56px 0;border-bottom:1px solid var(--line)}
-.sec:last-of-type{border-bottom:none}
-.sec-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:28px}
-.sec-num{
-  font-family:var(--font-hero);font-size:2.6rem;line-height:.8;color:var(--copper);
-  opacity:.28;flex:0 0 auto;letter-spacing:.02em;
-}
-.sec-t{min-width:0;flex:1}
-.sec-kicker{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
-.sec-title{font-family:var(--font-hero);font-size:clamp(1.7rem,6vw,2.6rem);font-weight:400;letter-spacing:.05em;line-height:1.05}
-
-.lead{font-size:1.05rem;font-weight:300;line-height:1.75;color:var(--ink-2);margin-bottom:18px}
-.lead strong{color:var(--ink);font-weight:600}
-.lead:last-child{margin-bottom:0}
-
-.pull{
-  position:relative;background:var(--surface);border:1px solid var(--line);
-  border-radius:12px;padding:24px 24px 24px 28px;margin:26px 0;overflow:hidden;
-}
-.pull::before{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:var(--copper)}
-.pull.verde::before{background:var(--ok)}
-.pull-k{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-bottom:10px}
-.pull.verde .pull-k{color:var(--ok)}
-.pull p{font-size:1.05rem;font-weight:300;line-height:1.7;color:var(--ink)}
-.pull p strong{font-weight:700}
-.pull p + p{margin-top:12px}
-
-/* ═════════ PACOTE (acordeão) ═════════ */
-.deliv{
+/* ═════════ CARDS ═════════ */
+.card{
   background:var(--surface);border:1px solid var(--line);border-radius:12px;
-  margin-bottom:12px;overflow:hidden;transition:border-color .3s ease;
+  padding:22px;margin-bottom:16px;transition:border-color .3s ease;
 }
-.deliv.open{border-color:var(--line-2)}
-.deliv-head{display:flex;align-items:center;gap:16px;width:100%;text-align:left;padding:20px;min-height:72px}
-.deliv-idx{
-  flex:0 0 34px;height:34px;border-radius:8px;display:grid;place-items:center;
-  border:1px solid var(--line);background:rgba(232,232,230,.04);
-  font-family:var(--font-hero);font-size:1.1rem;color:var(--copper);
+.card:hover{border-color:var(--line-2)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.card-title{
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-3);display:flex;align-items:center;gap:12px;
 }
-.deliv.open .deliv-idx{background:var(--copper-dim);border-color:var(--copper)}
-.deliv-t{min-width:0;flex:1}
-.deliv-t,.deliv-name,.deliv-tag{display:block}
-.deliv-name{font-size:1.05rem;font-weight:600;line-height:1.3}
-.deliv-tag{font-family:var(--font-mono);font-size:.46rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-top:5px}
-.deliv-plus{
-  flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);
-  display:grid;place-items:center;color:var(--ink-3);transition:.3s;position:relative;
-}
-.deliv-plus::before,.deliv-plus::after{content:'';position:absolute;background:currentColor;transition:.3s}
-.deliv-plus::before{width:10px;height:1.5px}
-.deliv-plus::after{width:1.5px;height:10px}
-.deliv.open .deliv-plus{border-color:var(--copper);color:var(--copper);transform:rotate(180deg)}
-.deliv.open .deliv-plus::after{opacity:0}
-.deliv-body{display:none;padding:0 20px 22px}
-.deliv.open .deliv-body{display:block;animation:slide .35s cubic-bezier(.16,1,.3,1) both}
-@keyframes slide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-.deliv-body p{font-size:.95rem;font-weight:300;line-height:1.7;color:var(--ink-2)}
-.pratica{
-  display:flex;flex-direction:column;gap:8px;margin-top:16px;padding:14px 16px;
-  background:rgba(191,0,255,.06);border:1px solid rgba(191,0,255,.18);border-radius:8px;
-}
-.pratica b{font-family:var(--font-mono);font-size:.46rem;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);font-weight:400}
-.pratica span{font-size:.9rem;font-weight:400;line-height:1.6;color:var(--ink)}
+.card-title::before{content:'';width:22px;height:2px;background:var(--copper);flex:0 0 22px}
+.card-meta{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
 
-/* ═════════ PROVAS (o coração da proposta) ═════════ */
-.provas{display:grid;gap:12px}
-.prova{
-  background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;
-  transition:border-color .3s ease;
+/* ═════════ PROGRESSO ═════════ */
+.prog{display:flex;align-items:center;gap:22px}
+.ring{width:104px;height:104px;flex:0 0 104px;position:relative}
+.ring svg{transform:rotate(-90deg);width:100%;height:100%}
+.ring circle{fill:none;stroke-width:7;stroke-linecap:round}
+.ring .bgc{stroke:rgba(232,232,230,.06)}
+.ring .fgc{stroke:var(--copper);filter:drop-shadow(0 0 6px var(--copper-glow));transition:stroke-dasharray 1.5s cubic-bezier(.16,1,.3,1)}
+.ring-val{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--font-hero);font-size:1.9rem;color:var(--copper);letter-spacing:.02em;
 }
-.prova:hover{border-color:var(--line-2)}
-.prova-h{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
-.prova-i{
-  flex:0 0 34px;height:34px;border-radius:8px;display:grid;place-items:center;
-  background:var(--copper-dim);border:1px solid rgba(191,0,255,.3);
-  font-family:var(--font-hero);font-size:1.05rem;color:var(--copper);
+.prog-info{min-width:0;flex:1}
+.prog-big{font-size:1.05rem;font-weight:600;margin-bottom:4px}
+.prog-small{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.segbar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:rgba(232,232,230,.06);gap:2px}
+.segbar i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:16px}
+.legend span{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--font-mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
 }
-.prova-tt{min-width:0;flex:1}
-.prova-n{font-size:1.05rem;font-weight:600;line-height:1.3;margin-bottom:5px}
-.prova-q{font-family:var(--font-mono);font-size:.46rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.prova-o{font-size:.93rem;font-weight:300;line-height:1.7;color:var(--ink-2)}
-.confere{
-  display:flex;flex-direction:column;gap:9px;margin-top:16px;padding:16px;
-  border-radius:8px;background:var(--ok-dim);border:1px solid var(--ok-line);
+.legend i{width:8px;height:8px;border-radius:2px;display:block}
+
+/* ═════════ STATS ═════════ */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.stat{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;
+  transition:border-color .3s ease, transform .3s ease;
 }
-.confere b{
-  display:flex;align-items:center;gap:8px;
-  font-family:var(--font-mono);font-size:.46rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--ok);font-weight:400;
+.stat:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.stat b{display:block;font-family:var(--font-hero);font-size:2.2rem;letter-spacing:.02em;line-height:1;font-weight:400}
+.stat span{
+  display:block;font-family:var(--font-mono);font-size:.52rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:8px;
 }
-.confere b svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:0 0 12px}
-.confere span{font-size:.92rem;font-weight:400;line-height:1.65;color:var(--ink)}
-.confere code{
-  font-family:var(--font-mono);font-size:.78rem;background:rgba(46,204,113,.12);
-  border:1px solid var(--ok-line);border-radius:4px;padding:1px 6px;color:var(--ok);
+.stat.acc b{color:var(--copper)}
+.stat.ok b{color:var(--ok)}
+.stat.late b{color:var(--late)}
+.stat.run b{color:var(--run)}
+
+/* ═════════ ALERTA ═════════ */
+.alert{
+  display:flex;gap:14px;align-items:flex-start;position:relative;overflow:hidden;
+  background:var(--surface);border:1px solid rgba(231,76,60,.2);
+  border-radius:12px;padding:18px;margin-bottom:16px;
+}
+.alert::before{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:var(--late);opacity:.7}
+.alert svg{width:17px;height:17px;flex:0 0 17px;stroke:var(--late);fill:none;stroke-width:1.8;stroke-linecap:round;margin-top:2px}
+.alert-t{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--late)}
+.alert-d{font-size:.9rem;font-weight:300;color:var(--ink-2);margin-top:5px}
+
+/* ═════════ LINHAS ═════════ */
+.rows{display:flex;flex-direction:column}
+.row{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  padding:14px 0;border-bottom:1px solid var(--line);min-height:58px;transition:opacity .2s;
+}
+.row:last-child{border-bottom:none;padding-bottom:0}
+.row:first-child{padding-top:0}
+.row:hover{opacity:.75}
+.row-date{
+  flex:0 0 46px;text-align:center;border-radius:6px;padding:6px 0;
+  background:var(--none-dim);border:1px solid var(--line);
+}
+.row-date b{display:block;font-family:var(--font-hero);font-size:1.25rem;line-height:1;letter-spacing:.02em;color:var(--copper);font-weight:400}
+.row-date span{display:block;font-family:var(--font-mono);font-size:.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-top:3px}
+.row-date.late{background:var(--late-dim);border-color:rgba(231,76,60,.25)}
+.row-date.late b{color:var(--late)}
+.row-body{min-width:0;flex:1}
+.row-name{
+  font-size:.95rem;font-weight:600;line-height:1.35;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.row-sub{
+  font-family:var(--font-mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.row-tail{flex:0 0 auto;display:flex;align-items:center;gap:8px}
+.chev{width:14px;height:14px;stroke:var(--ink-3);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--font-mono);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:4px 10px;border-radius:4px;white-space:nowrap;
+}
+.pill.ok{background:var(--ok-dim);color:var(--ok);border:1px solid rgba(46,204,113,.2)}
+.pill.late{background:var(--late-dim);color:var(--late);border:1px solid rgba(231,76,60,.2)}
+.pill.run{background:var(--run-dim);color:var(--run);border:1px solid rgba(191,0,255,.25)}
+.pill.plan{background:var(--plan-dim);color:var(--plan);border:1px solid rgba(243,156,18,.2)}
+.pill.none{background:var(--none-dim);color:var(--ink-3);border:1px solid var(--line)}
+
+/* ═════════ COLUNAS (RESUMO) ═════════ */
+.col-item{padding:15px 0;border-bottom:1px solid var(--line)}
+.col-item:last-child{border-bottom:none;padding-bottom:0}
+.col-item:first-child{padding-top:0}
+.col-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
+.col-name{font-size:.92rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.col-num{font-family:var(--font-mono);font-size:.52rem;letter-spacing:.1em;color:var(--ink-3);flex:0 0 auto}
+.bar{height:4px;border-radius:2px;background:rgba(232,232,230,.06);overflow:hidden}
+.bar i{
+  display:block;height:100%;border-radius:2px;width:0;
+  background:linear-gradient(90deg, var(--copper), #e8c87a);
+  transition:width 1.5s cubic-bezier(.16,1,.3,1);
 }
 
-/* ═════════ PREÇO ÚNICO ═════════ */
-.unico{
-  position:relative;background:var(--surface);border:1px solid rgba(191,0,255,.35);
-  border-radius:16px;padding:34px 24px;text-align:center;overflow:hidden;margin-bottom:16px;
-}
-.unico::after{content:'';position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 70px rgba(191,0,255,.1)}
-.unico-k{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
-.unico-v{
-  font-family:var(--font-hero);font-size:clamp(3.6rem,19vw,5.6rem);line-height:.88;
-  color:var(--copper);letter-spacing:.01em;margin-bottom:10px;
-}
-.unico-p{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-bottom:22px}
-.unico-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;position:relative;z-index:1}
-.utag{
-  display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:6px;
-  border:1px solid var(--ok-line);background:var(--ok-dim);
-  font-family:var(--font-mono);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ok);
-}
-.utag svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;flex:0 0 11px}
-
-/* ═════════ PARCELAMENTO ═════════ */
-.parc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px}
-.parc-k{
-  font-family:var(--font-mono);font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--ink-3);display:flex;align-items:center;gap:12px;margin-bottom:6px;
-}
-.parc-k::before{content:'';width:20px;height:2px;background:var(--copper);flex:0 0 20px}
-.parc-nota{font-size:.88rem;font-weight:300;line-height:1.6;color:var(--ink-3);margin-bottom:18px}
-.parc-opts{display:flex;gap:8px;margin-bottom:22px}
-.parc-btn{
-  flex:1;min-height:56px;border-radius:8px;border:1px solid var(--line);
-  background:transparent;color:var(--ink-3);transition:.3s;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-}
-.parc-btn:hover{border-color:var(--line-2);color:var(--ink)}
-.parc-btn b{font-family:var(--font-hero);font-size:1.3rem;line-height:1;font-weight:400}
-.parc-btn span{font-family:var(--font-mono);font-size:.42rem;letter-spacing:.1em;text-transform:uppercase}
-.parc-btn[aria-pressed="true"]{background:var(--copper-dim);border-color:var(--copper);color:var(--copper)}
-
-.cal{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:22px}
-.cal-m{
-  border:1px solid var(--line);border-radius:8px;padding:14px 6px;text-align:center;
-  transition:.35s;background:rgba(232,232,230,.02);
-}
-.cal-m b{
-  display:block;font-family:var(--font-mono);font-size:.42rem;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--ink-3);font-weight:400;margin-bottom:7px;
-}
-.cal-m span{display:block;font-family:var(--font-hero);font-size:1.1rem;line-height:1;color:var(--ink-3)}
-.cal-m.on{border-color:rgba(191,0,255,.45);background:var(--copper-dim)}
-.cal-m.on b{color:var(--copper)}
-.cal-m.on span{color:var(--ink)}
-.cal-m.off{opacity:.3}
-.cal-m.off span{font-size:.9rem}
-
-.kpis{display:grid;grid-template-columns:1fr;gap:10px}
-.kpi{border:1px solid var(--line);border-radius:8px;padding:16px;background:rgba(232,232,230,.02)}
-.kpi b{display:block;font-family:var(--font-mono);font-size:.46rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3);font-weight:400;margin-bottom:8px}
-.kpi span{font-family:var(--font-hero);font-size:1.9rem;letter-spacing:.02em;line-height:1;display:block}
-.kpi.destaque{border-color:rgba(191,0,255,.35);background:rgba(191,0,255,.07)}
-.kpi.destaque span{color:var(--copper)}
-.kpi.verde{border-color:var(--ok-line);background:var(--ok-dim)}
-.kpi.verde span{color:var(--ok)}
-
-/* ═════════ MANUTENÇÃO ═════════ */
-.manut{display:grid;gap:12px;margin-top:8px}
-.mitem{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
-.mitem i{
-  flex:0 0 30px;height:30px;border-radius:8px;background:var(--copper-dim);
-  border:1px solid rgba(191,0,255,.3);display:grid;place-items:center;
-}
-.mitem svg{width:14px;height:14px;stroke:var(--copper);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.mitem b{display:block;font-size:1rem;font-weight:600;margin-bottom:5px}
-.mitem span{font-size:.9rem;font-weight:300;line-height:1.65;color:var(--ink-2)}
-
-/* ═════════ PASSOS ═════════ */
-.passos{display:flex;flex-direction:column;gap:10px;margin-bottom:22px}
-.passo{
-  display:flex;gap:16px;align-items:flex-start;width:100%;text-align:left;
-  background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;transition:.3s;
-}
-.passo:hover{border-color:var(--line-2)}
-.passo.feito{border-color:var(--ok-line);background:rgba(46,204,113,.04)}
-.passo-box{
-  flex:0 0 24px;height:24px;border-radius:6px;border:1px solid var(--line-2);position:relative;
-  margin-top:1px;transition:.3s;
-}
-.passo.feito .passo-box{background:var(--ok-dim);border-color:var(--ok)}
-.passo.feito .passo-box::after{
-  content:'';position:absolute;left:8px;top:4px;width:5px;height:10px;
-  border:solid var(--ok);border-width:0 2px 2px 0;transform:rotate(45deg);
-}
-.passo-t{min-width:0;flex:1}
-.passo-n{font-family:var(--font-mono);font-size:.46rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;display:block}
-.passo-d{font-size:1rem;font-weight:600;line-height:1.4;display:block}
-.passo.feito .passo-d{color:var(--ink-2)}
-.passo-sub{font-size:.86rem;font-weight:300;color:var(--ink-3);margin-top:5px;display:block;line-height:1.6}
-.passos-prog{display:flex;align-items:center;gap:14px;margin-bottom:26px}
-.passos-prog .track{flex:1;height:3px;border-radius:2px;background:rgba(232,232,230,.08);overflow:hidden}
-.passos-prog .track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--copper),var(--ok));transition:width .5s cubic-bezier(.16,1,.3,1)}
-.passos-prog span{font-family:var(--font-mono);font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);flex:0 0 auto}
-
-/* ═════════ CTA ═════════ */
-.cta{
-  background:var(--surface);border:1px solid rgba(191,0,255,.28);border-radius:16px;
-  padding:36px 26px;text-align:center;position:relative;overflow:hidden;
-}
-.cta::after{content:'';position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 70px rgba(191,0,255,.09)}
-.cta h3{font-family:var(--font-hero);font-size:clamp(1.6rem,6vw,2.3rem);font-weight:400;letter-spacing:.04em;line-height:1.1;margin-bottom:14px}
-.cta p{font-size:.98rem;font-weight:300;color:var(--ink-2);line-height:1.7;max-width:46ch;margin:0 auto 26px}
-.cta-btns{display:flex;flex-direction:column;gap:10px;position:relative;z-index:1}
+/* ═════════ BOTÕES ═════════ */
 .btn{
-  display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:54px;
-  border-radius:8px;background:var(--copper-dim);border:1px solid var(--copper);color:var(--copper);
-  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;transition:.3s;
+  display:flex;align-items:center;justify-content:center;gap:12px;width:100%;
+  min-height:54px;border-radius:8px;
+  background:var(--copper-dim);border:1px solid var(--copper);color:var(--copper);
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  transition:.3s;margin-bottom:16px;
 }
-.btn:hover{background:rgba(191,0,255,.24);box-shadow:0 0 26px rgba(191,0,255,.2)}
+.btn:hover{background:rgba(191,0,255,.22);box-shadow:0 0 24px rgba(191,0,255,.18)}
 .btn:active{transform:scale(.985)}
 .btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .btn.ghost{background:transparent;border-color:var(--line-2);color:var(--ink-3)}
 .btn.ghost:hover{border-color:var(--copper);color:var(--copper);box-shadow:none}
 
-/* ═════════ ASSINATURA ═════════ */
-.sign{padding:48px 0 64px;text-align:center}
-.sign-nome{font-family:var(--font-hero);font-size:1.6rem;letter-spacing:.08em;margin-bottom:6px}
-.sign-cargo{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
-.sign-link{margin-top:20px;font-family:var(--font-mono);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase}
+/* ═════════ BUSCA + FILTROS ═════════ */
+.tools{
+  position:sticky;top:calc(58px + env(safe-area-inset-top));z-index:50;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  margin:0 calc(var(--pad) * -1);padding:12px var(--pad) 10px;
+  border-bottom:1px solid var(--line);
+}
+.search{position:relative;margin-bottom:10px}
+.search .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--ink-3);fill:none;stroke-width:1.8;stroke-linecap:round}
+.search input{
+  width:100%;height:46px;border-radius:8px;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  padding:0 42px 0 40px;font-size:.95rem;font-weight:400;outline:none;transition:.3s;
+}
+.search input::placeholder{color:var(--ink-3)}
+.search input:focus{border-color:var(--copper);box-shadow:0 0 0 3px var(--copper-dim)}
+.search .clear{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:32px;height:32px;display:none;place-items:center;border-radius:6px;color:var(--ink-3)}
+.search .clear.on{display:grid}
+.search .clear svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;padding:9px 16px;border-radius:6px;
+  border:1px solid var(--line);background:transparent;color:var(--ink-3);
+  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;
+  white-space:nowrap;transition:.3s;
+}
+.chip:hover{border-color:var(--line-2);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--copper-dim);border-color:var(--copper);color:var(--copper)}
+.chip b{margin-left:6px;opacity:.7;font-weight:400}
 
-/* ═════════ REVEAL ═════════ */
-.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
-.rv.in{opacity:1;transform:none}
+/* ═════════ SEGMENTED ═════════ */
+.seg{display:flex;gap:8px;margin:20px 0;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{
+  flex:1 0 auto;min-width:96px;min-height:40px;border-radius:6px;
+  border:1px solid var(--line);background:transparent;color:var(--ink-3);
+  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;transition:.3s;
+}
+.seg button:hover{border-color:var(--line-2);color:var(--ink)}
+.seg button[aria-selected="true"]{background:var(--copper-dim);border-color:var(--copper);color:var(--copper)}
+
+/* ═════════ ACORDEÃO DE ETAPAS ═════════ */
+.acc{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  margin-bottom:14px;overflow:hidden;transition:border-color .3s ease;
+}
+.acc.open{border-color:var(--line-2)}
+.acc-head{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:18px;min-height:68px}
+.acc-idx{
+  flex:0 0 auto;font-family:var(--font-hero);font-size:1.8rem;line-height:1;
+  color:var(--copper);opacity:.4;letter-spacing:.02em;min-width:40px;
+}
+.acc.open .acc-idx{opacity:1}
+.acc-t{min-width:0;flex:1}
+.acc-name{font-size:1.05rem;font-weight:600;line-height:1.25}
+.acc-sub{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:5px}
+.acc-arrow{
+  width:26px;height:26px;flex:0 0 26px;padding:6px;border:1px solid var(--line);border-radius:50%;
+  stroke:var(--ink-3);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:.3s;
+}
+.acc.open .acc-arrow{transform:rotate(180deg);border-color:var(--copper);stroke:var(--copper)}
+.acc-body{display:none;padding:0 18px 8px}
+.acc.open .acc-body{display:block}
+.acc-bar{height:2px;background:rgba(232,232,230,.06)}
+.acc-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--copper),#e8c87a);transition:width 1.5s cubic-bezier(.16,1,.3,1)}
+
+/* ═════════ TAREFA ═════════ */
+.task{display:flex;gap:14px;width:100%;text-align:left;padding:16px 0;border-bottom:1px solid var(--line);min-height:58px;transition:opacity .2s}
+.task:last-child{border-bottom:none}
+.task:hover{opacity:.8}
+.task-mark{
+  flex:0 0 26px;height:26px;border-radius:6px;margin-top:1px;position:relative;
+  background:var(--none-dim);border:1px solid var(--line);
+}
+.task-mark::after{
+  content:'';position:absolute;left:50%;top:50%;width:6px;height:6px;border-radius:50%;
+  transform:translate(-50%,-50%);background:var(--ink-3);
+}
+.task-mark.ok{background:var(--ok-dim);border-color:rgba(46,204,113,.3)}
+.task-mark.ok::after{
+  left:8px;top:5px;width:5px;height:10px;border:solid var(--ok);border-width:0 2px 2px 0;
+  border-radius:0;background:none;transform:rotate(45deg);
+}
+.task-mark.late{background:var(--late-dim);border-color:rgba(231,76,60,.3)}
+.task-mark.late::after{background:var(--late)}
+.task-mark.run{background:var(--run-dim);border-color:rgba(191,0,255,.3)}
+.task-mark.run::after{background:var(--copper);box-shadow:0 0 8px var(--copper-glow)}
+.task-mark.plan{background:var(--plan-dim);border-color:rgba(243,156,18,.25)}
+.task-mark.plan::after{background:var(--plan)}
+.task-b{min-width:0;flex:1}
+.task-name{font-size:.95rem;font-weight:600;line-height:1.4}
+.task-name.done{color:var(--ink-2);text-decoration:line-through;text-decoration-color:rgba(46,204,113,.4)}
+.task-desc{
+  font-size:.82rem;font-weight:300;color:rgba(232,232,230,.4);margin-top:5px;line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.task-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:4px 10px;border-radius:4px;
+  background:var(--none-dim);border:1px solid var(--line);color:var(--ink-2);
+  max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tag i{width:7px;height:7px;border-radius:50%;flex:0 0 7px}
+.mini{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font-mono);font-size:.5rem;letter-spacing:.1em;color:var(--copper);
+}
+.mini svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mini.late{color:var(--late)}
+.mini.ok{color:var(--ok)}
+
+/* ═════════ CRONOGRAMA ═════════ */
+.tl-month{
+  position:sticky;top:calc(58px + 112px + env(safe-area-inset-top));z-index:20;
+  background:var(--bg);padding:18px 0 10px;
+  font-family:var(--font-hero);font-size:1.3rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);
+}
+.tl-list{position:relative;padding-left:28px}
+.tl-list::before{content:'';position:absolute;left:8px;top:6px;bottom:6px;width:1px;background:var(--line-2)}
+.tl-item{position:relative;padding:12px 0;width:100%;text-align:left;display:block;transition:opacity .2s}
+.tl-item:hover{opacity:.8}
+.tl-item::before{
+  content:'';position:absolute;left:-24px;top:19px;width:9px;height:9px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--copper);
+}
+.tl-item.ok::before{background:var(--ok);border-color:var(--ok)}
+.tl-item.late::before{background:var(--late);border-color:var(--late)}
+.tl-d{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--copper)}
+.tl-item.ok .tl-d{color:var(--ok)}
+.tl-item.late .tl-d{color:var(--late)}
+.tl-n{font-size:.95rem;font-weight:600;line-height:1.35;margin-top:4px}
+.tl-n.done{color:var(--ink-2);text-decoration:line-through;text-decoration-color:rgba(46,204,113,.4)}
+.tl-c{font-family:var(--font-mono);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:5px}
+.today-line{display:flex;align-items:center;gap:12px;margin:14px 0 8px;color:var(--copper)}
+.today-line i{flex:1;height:1px;background:var(--copper);opacity:.35}
+.today-line span{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.18em;text-transform:uppercase}
+
+/* ═════════ VAZIO ═════════ */
+.empty{text-align:center;padding:48px 20px;color:var(--ink-3)}
+.empty svg{width:32px;height:32px;stroke:currentColor;fill:none;stroke-width:1.2;opacity:.45;margin-bottom:14px}
+.empty p{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.15em;text-transform:uppercase}
+
+/* ═════════ SHEET ═════════ */
+.sheet-bg{position:fixed;inset:0;z-index:90;background:rgba(5,5,8,.75);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.3s}
+.sheet-bg.on{opacity:1;visibility:visible}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:91;
+  background:#0b0b16;border:1px solid var(--line-2);border-bottom:none;
+  border-radius:16px 16px 0 0;box-shadow:0 -20px 60px rgba(0,0,0,.6);
+  max-height:92dvh;display:flex;flex-direction:column;
+  transform:translateY(101%);transition:transform .4s cubic-bezier(.16,1,.3,1);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.sheet.on{transform:none}
+.sheet-grab{padding:12px 0 4px;display:grid;place-items:center;flex:0 0 auto}
+.sheet-grab i{width:38px;height:3px;border-radius:2px;background:var(--line-2);display:block}
+.sheet-head{padding:8px 22px 16px;border-bottom:1px solid var(--line);flex:0 0 auto}
+.sheet-eyebrow{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+.sheet-title{font-family:var(--font-hero);font-size:1.7rem;letter-spacing:.04em;line-height:1.1}
+.sheet-body{padding:20px 22px 28px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.blk{margin-bottom:24px}
+.blk:last-child{margin-bottom:0}
+.blk-t{font-family:var(--font-mono);font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.blk-t::before{content:'';width:18px;height:1px;background:var(--copper);flex:0 0 18px}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.kv:last-child{border-bottom:none}
+.kv b{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:400;flex:0 0 auto;padding-top:3px}
+.kv span{text-align:right;font-weight:600;min-width:0;word-break:break-word}
+.prose{font-size:.92rem;font-weight:300;line-height:1.7;color:var(--ink-2);word-wrap:break-word}
+.prose h1,.prose h2,.prose h3{font-family:var(--font-body);font-size:.98rem;font-weight:700;color:var(--ink);margin:16px 0 8px}
+.prose h1:first-child,.prose h2:first-child,.prose h3:first-child{margin-top:0}
+.prose p{margin-bottom:11px}
+.prose p:last-child{margin-bottom:0}
+.prose ul,.prose ol{margin:0 0 11px 20px}
+.prose li{margin-bottom:6px}
+.prose code{background:var(--none-dim);border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-family:var(--font-mono);font-size:.75rem}
+.prose pre{background:var(--none-dim);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:11px;overflow-x:auto}
+.prose pre code{background:none;border:none;padding:0;font-size:.72rem;line-height:1.6}
+.prose strong{color:var(--ink);font-weight:700}
+.prose hr{border:none;border-top:1px solid var(--line);margin:14px 0}
+.chk{margin-bottom:16px}
+.chk-h{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px;font-size:.88rem;font-weight:600}
+.chk-h span{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.1em;color:var(--ink-3);font-weight:400;padding-top:3px}
+.chk-i{display:flex;gap:11px;align-items:flex-start;font-size:.88rem;font-weight:300;padding:6px 0;color:var(--ink-2)}
+.chk-i i{flex:0 0 15px;height:15px;border-radius:3px;border:1px solid var(--line-2);margin-top:3px;position:relative}
+.chk-i.done i{background:var(--ok-dim);border-color:rgba(46,204,113,.4)}
+.chk-i.done i::after{content:'';position:absolute;left:4.5px;top:1px;width:3.5px;height:7px;border:solid var(--ok);border-width:0 1.6px 1.6px 0;transform:rotate(45deg)}
+.chk-i.done span{color:var(--ink-3);text-decoration:line-through}
+
+/* ═════════ TABBAR ═════════ */
+.tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:70;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom);display:flex;
+}
+.tabbar button{
+  flex:1;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  color:var(--ink-3);transition:.3s;
+}
+.tabbar button svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tabbar button span{font-family:var(--font-mono);font-size:.48rem;letter-spacing:.16em;text-transform:uppercase}
+.tabbar button[aria-current="true"]{color:var(--copper)}
+
+/* ═════════ ESTADOS ═════════ */
+#boot,#fail{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:36px;text-align:center}
+#boot.off,#fail.off{display:none}
+.loader{width:40px;height:40px;border:2px solid var(--line);border-top-color:var(--copper);border-radius:50%;animation:spin .8s linear infinite}
+.boot-t{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.fail-t{font-family:var(--font-hero);font-size:1.9rem;letter-spacing:.08em;color:var(--copper)}
+.fail-m{font-family:var(--font-mono);font-size:.62rem;line-height:1.9;letter-spacing:.05em;color:var(--ink-3);max-width:520px;white-space:pre-line}
+.fail-code{font-family:var(--font-mono);font-size:.6rem;color:var(--ink-3);background:var(--none-dim);border:1px solid var(--line);border-radius:8px;padding:12px 16px;max-width:100%;overflow-x:auto}
+.field{display:flex;gap:10px;width:100%;max-width:420px}
+.field input{
+  flex:1;min-width:0;height:48px;border-radius:8px;border:1px solid var(--line-2);
+  background:var(--surface);color:var(--ink);padding:0 16px;outline:none;font-size:.95rem;
+}
+.field input:focus{border-color:var(--copper);box-shadow:0 0 0 3px var(--copper-dim)}
+.field button{
+  flex:0 0 auto;padding:0 22px;height:48px;border-radius:8px;
+  background:var(--copper-dim);border:1px solid var(--copper);color:var(--copper);
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;
+}
+
+/* spans dentro de <button> precisam virar bloco */
+.task-b,.task-name,.row-body,.row-sub,.acc-t,.acc-name,.acc-sub,.tl-d,.tl-n,.tl-c{display:block}
 
 /* ═════════ DESKTOP ═════════ */
+.desk-nav{display:none}
 @media (min-width:640px){
   :root{--pad:32px}
-  .pratica{flex-direction:row;gap:12px}
-  .pratica b{flex:0 0 auto;padding-top:3px}
-  .nav-links{justify-content:flex-end}
-  .kpis{grid-template-columns:repeat(3,1fr)}
-  .cta-btns{flex-direction:row;justify-content:center}
-  .btn{width:auto;padding:0 32px}
-  .cal-m{padding:16px 10px}
-  .cal-m span{font-size:1.3rem}
+  .stats{grid-template-columns:repeat(4,1fr)}
 }
 @media (min-width:900px){
   :root{--pad:48px}
-  .sec{padding:80px 0}
-  .hero{padding:80px 0 64px}
-  .sec-num{font-size:3.4rem}
-  .unico{padding:48px 32px}
-  .provas{grid-template-columns:1fr 1fr}
+  body{padding-bottom:40px}
+  .tabbar{display:none}
+  .topbar-in{height:66px}
+  .desk-nav{display:flex;gap:8px}
+  .desk-nav button{
+    padding:9px 20px;border-radius:6px;border:1px solid var(--line);
+    font-family:var(--font-mono);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);transition:.3s;
+  }
+  .desk-nav button:hover{border-color:var(--line-2);color:var(--ink)}
+  .desk-nav button[aria-current="true"]{background:var(--copper-dim);border-color:var(--copper);color:var(--copper)}
+  .tools{top:66px}
+  .tl-month{top:180px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+  .grid-2 > .card{margin-bottom:0}
+  .sheet{
+    left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-46%);
+    max-width:700px;width:calc(100% - 64px);border:1px solid var(--line-2);border-radius:16px;
+    max-height:86dvh;opacity:0;transition:transform .35s cubic-bezier(.16,1,.3,1),opacity .35s;
+  }
+  .sheet.on{transform:translate(-50%,-50%);opacity:1}
+  .sheet-grab{display:none}
+  .sheet-head{padding-top:26px}
 }
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
-  .rv{opacity:1;transform:none}
-}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
 
-<div id="scrollbar"></div>
+<!-- ══ CARREGANDO ══ -->
+<div id="boot">
+  <div class="loader"></div>
+  <div class="boot-t" id="boot-txt">Conectando ao Trello…</div>
+</div>
 
-<!-- ══ NAV ══ -->
-<nav class="nav">
-  <div class="wrap nav-in">
-    <div class="logo">
-      <div class="logo-mark">B</div>
-      <div class="logo-txt">BEYOND BITS</div>
-    </div>
-    <div class="nav-links" id="nav-links">
-      <a href="#contexto">Contexto</a>
-      <a href="#pacote">O pacote</a>
-      <a href="#provas">Como conferir</a>
-      <a href="#investimento">Investimento</a>
-      <a href="#manutencao">Manutenção</a>
-      <a href="#passos">Começar</a>
-    </div>
+<!-- ══ ERRO ══ -->
+<div id="fail" class="off">
+  <div class="fail-t">Não foi possível carregar</div>
+  <div class="fail-m" id="fail-msg"></div>
+  <div class="fail-code" id="fail-code" hidden></div>
+  <div class="field">
+    <input id="fail-input" type="text" placeholder="ID ou link do quadro" autocapitalize="off" autocorrect="off" spellcheck="false">
+    <button id="fail-go">Abrir</button>
   </div>
-</nav>
+</div>
 
-<!-- ══ HERO ══ -->
-<header class="hero">
-  <div class="wrap">
-    <div class="eyebrow"><i></i>Proposta de parceria técnica</div>
-    <h1>SEO &amp;<em>Performance Web</em></h1>
-    <p class="hero-sub">
-      Um pacote fechado de estruturação técnica para o site do
-      <strong id="cli-nome">seu negócio</strong>, com preço único, parcelável em até 4 vezes
-      e <strong>primeira parcela só em novembro</strong>. Cada entrega vem com um jeito de
-      você conferir por conta própria.
-    </p>
-    <div class="hero-meta">
-      <div class="meta-chip"><b>Para</b><span id="meta-cliente">—</span></div>
-      <div class="meta-chip"><b>Investimento</b><span id="meta-valor">—</span></div>
-      <div class="meta-chip"><b>Válida até</b><span id="meta-validade">—</span></div>
+<!-- ══ TOPO ══ -->
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <div class="mark" id="mark">D</div>
+    <div class="top-titles">
+      <div class="top-title" id="top-title">Painel do Projeto</div>
+      <div class="top-sub" id="top-sub">Carregando…</div>
     </div>
+    <nav class="desk-nav" id="desk-nav">
+      <button data-goto="resumo" aria-current="true">Resumo</button>
+      <button data-goto="detalhe" aria-current="false">Detalhes</button>
+    </nav>
+    <button class="icon-btn" id="btn-reload" aria-label="Atualizar dados">
+      <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+    </button>
   </div>
 </header>
 
 <main>
 
-<!-- ══ 01 CONTEXTO ══ -->
-<section class="sec" id="contexto">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <div class="sec-num">01</div>
-      <div class="sec-t">
-        <div class="sec-kicker">O ponto de partida</div>
-        <h2 class="sec-title">Um pacote, um preço, prova no fim</h2>
+<!-- ══════════ VIEW: RESUMO ══════════ -->
+<section class="view on wrap" id="view-resumo">
+
+  <div class="hero">
+    <div class="eyebrow"><i class="dot live" id="live-dot"></i><span id="live-txt">Ao vivo</span></div>
+    <h1 id="p-title">—</h1>
+    <p class="hero-desc" id="p-desc"></p>
+  </div>
+
+  <div id="alert-slot"></div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Progresso geral</div>
+      <div class="card-meta" id="prog-meta"></div>
+    </div>
+    <div class="prog">
+      <div class="ring">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="bgc" cx="50" cy="50" r="43"></circle>
+          <circle class="fgc" id="ring-fg" cx="50" cy="50" r="43" stroke-dasharray="0 999"></circle>
+        </svg>
+        <div class="ring-val" id="ring-val">0%</div>
+      </div>
+      <div class="prog-info">
+        <div class="prog-big" id="prog-big">—</div>
+        <div class="prog-small" id="prog-small">—</div>
+        <div class="segbar" id="segbar"></div>
       </div>
     </div>
+    <div class="legend" id="legend"></div>
+  </div>
 
-    <div class="rv">
-      <p class="lead">
-        Conforme conversamos sobre melhorar o posicionamento do seu site no Google, preparei
-        uma proposta focada em <strong>estruturação técnica</strong> e crescimento orgânico.
-      </p>
-      <p class="lead">
-        Na Beyond Bits, a base de qualquer parceria sólida é a transparência. Tenho bagagem
-        técnica forte em estruturação de código, desenvolvimento web e criação de interfaces —
-        e agora estou expandindo oficialmente os serviços da agência para incluir a
-        <strong>gestão ativa de SEO</strong>.
-      </p>
-      <p class="lead">
-        Como essa é uma frente que estou inaugurando no meu portfólio, montei o trabalho como
-        um <strong>pacote fechado</strong>: escopo definido, preço único, sem mensalidade
-        surpresa no meio do caminho. E fiz questão de que cada entrega seja algo que
-        <strong>você mesmo consiga abrir e checar</strong> — não um relatório bonito que só eu
-        sei ler.
-      </p>
+  <div class="stats" id="stats"></div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Próximos prazos</div>
+        <button class="card-meta" id="link-prazos" style="color:var(--red)">Ver todos</button>
+      </div>
+      <div class="rows" id="next-rows"></div>
     </div>
 
-    <div class="pull rv">
-      <div class="pull-k">O acordo em três linhas</div>
-      <p>
-        <strong>1.</strong> Um pacote único de <strong id="pull-valor">—</strong> pelo grosso do
-        trabalho técnico, parcelável em até 4 vezes sem juros.
-      </p>
-      <p>
-        <strong>2.</strong> O trabalho começa assim que você liberar os acessos, mas a
-        <strong>primeira parcela só é cobrada em <span id="pull-mes">—</span></strong>.
-      </p>
-      <p>
-        <strong>3.</strong> Depois da entrega, combinamos um valor fixo mensal de manutenção da
-        estratégia — <strong>a partir de <span id="pull-manut">—</span></strong>.
-      </p>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title" id="cols-title">Etapas do quadro</div>
+        <div class="card-meta" id="cols-meta"></div>
+      </div>
+      <div id="cols-rows"></div>
     </div>
   </div>
+
+  <button class="btn" id="btn-detalhe">
+    Ver detalhamento completo
+    <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+  </button>
+
 </section>
 
-<!-- ══ 02 PACOTE ══ -->
-<section class="sec" id="pacote">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <div class="sec-num">02</div>
-      <div class="sec-t">
-        <div class="sec-kicker">Escopo fechado</div>
-        <h2 class="sec-title">O que está no pacote</h2>
-      </div>
+<!-- ══════════ VIEW: DETALHE ══════════ -->
+<section class="view wrap" id="view-detalhe">
+
+  <div class="tools">
+    <div class="search">
+      <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Buscar cartão, descrição ou etiqueta" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button class="clear" id="q-clear" aria-label="Limpar busca">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
     </div>
-
-    <p class="lead rv" style="margin-bottom:28px">
-      SEO não é mágica, é infraestrutura e análise de dados. Vou atuar nos bastidores do site
-      para garantir que o Google consiga <strong>ler, indexar e recomendar</strong> os seus serviços.
-      Toque em cada frente para ver o que ela significa na prática.
-    </p>
-
-    <div id="pacote-lista"></div>
+    <div class="chips" id="chips"></div>
   </div>
-</section>
 
-<!-- ══ 03 PROVAS ══ -->
-<section class="sec" id="provas">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <div class="sec-num">03</div>
-      <div class="sec-t">
-        <div class="sec-kicker">Sem achismo</div>
-        <h2 class="sec-title">Como você confere cada entrega</h2>
-      </div>
-    </div>
-
-    <div class="rv">
-      <p class="lead">
-        Essa é a parte mais importante da proposta. SEO tem fama de ser vago justamente porque
-        muita gente entrega relatório sem prova. Aqui é o contrário:
-        <strong>toda entrega tem um número, um lugar público onde esse número mora e um jeito de
-        você checar sem depender de mim</strong>.
-      </p>
-    </div>
-
-    <div class="pull verde rv">
-      <div class="pull-k">A regra</div>
-      <p>
-        Se eu não conseguir te mostrar <strong>onde</strong> conferir uma entrega,
-        ela não entra no pacote.
-      </p>
-    </div>
-
-    <div class="provas rv" id="provas-lista"></div>
-
-    <div class="pull rv">
-      <div class="pull-k">Marco zero e propriedade</div>
-      <p>
-        Antes de tocar em qualquer linha do site, eu registro o <strong>estado inicial</strong> com
-        data. É esse documento que transforma o resultado em comparação, e não em opinião.
-      </p>
-      <p>
-        As contas do Google Search Console e do Analytics são criadas <strong>no seu nome</strong>,
-        com você como proprietário. Se a parceria terminar, os painéis, os dados e o histórico
-        continuam sendo seus.
-      </p>
-    </div>
+  <div class="seg" id="seg" role="tablist">
+    <button role="tab" data-tab="quadro" aria-selected="true">Etapas</button>
+    <button role="tab" data-tab="prazos" aria-selected="false">Cronograma</button>
+    <button role="tab" data-tab="etiquetas" aria-selected="false">Etiquetas</button>
+    <button role="tab" data-tab="sobre" aria-selected="false">Sobre</button>
   </div>
-</section>
 
-<!-- ══ 04 INVESTIMENTO ══ -->
-<section class="sec" id="investimento">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <div class="sec-num">04</div>
-      <div class="sec-t">
-        <div class="sec-kicker">Preço único</div>
-        <h2 class="sec-title">O investimento</h2>
-      </div>
-    </div>
+  <div id="tab-quadro"></div>
+  <div id="tab-prazos" hidden></div>
+  <div id="tab-etiquetas" hidden></div>
+  <div id="tab-sobre" hidden></div>
 
-    <div class="unico rv">
-      <div class="unico-k">Pacote de estruturação técnica</div>
-      <div class="unico-v" id="unico-valor">—</div>
-      <div class="unico-p" id="unico-parc">—</div>
-      <div class="unico-tags" id="unico-tags"></div>
-    </div>
-
-    <div class="parc rv">
-      <div class="parc-k">Simulador de parcelamento</div>
-      <p class="parc-nota">
-        Escolha em quantas vezes prefere dividir. O total é sempre o mesmo — não há juros.
-      </p>
-
-      <div class="parc-opts" id="parc-opts" role="group" aria-label="Número de parcelas"></div>
-      <div class="cal" id="cal"></div>
-
-      <div class="kpis">
-        <div class="kpi destaque"><b>Valor de cada parcela</b><span id="kpi-parcela">—</span></div>
-        <div class="kpi"><b>Total do pacote</b><span id="kpi-total">—</span></div>
-        <div class="kpi verde"><b>Primeira cobrança</b><span id="kpi-primeira">—</span></div>
-      </div>
-
-      <p class="parc-nota" id="parc-resumo" style="margin-top:18px;margin-bottom:0"></p>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 05 MANUTENÇÃO ══ -->
-<section class="sec" id="manutencao">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <div class="sec-num">05</div>
-      <div class="sec-t">
-        <div class="sec-kicker">Depois da entrega</div>
-        <h2 class="sec-title">Manutenção da estratégia</h2>
-      </div>
-    </div>
-
-    <div class="rv">
-      <p class="lead">
-        O pacote acima é <strong>completo e independente</strong>: se pararmos ali, o trabalho
-        entregue continua no ar e as contas continuam suas. Mas SEO não é obra que se faz uma
-        vez — o Google muda, concorrente entra, página nova aparece.
-      </p>
-      <p class="lead">
-        Por isso, na entrega do relatório final combinamos um <strong>valor fixo mensal</strong>
-        para eu seguir cuidando da estratégia. Esse valor parte de
-        <strong id="manut-valor">—</strong> e é definido junto com você, conforme o que o site
-        passar a exigir. Sem contrato de fidelidade.
-      </p>
-    </div>
-
-    <div class="manut rv">
-      <div class="mitem">
-        <i><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></i>
-        <div>
-          <b>Monitoramento do Search Console</b>
-          <span>Acompanho os avisos do Google e corrijo erro novo de indexação antes que ele derrube página do índice.</span>
-        </div>
-      </div>
-      <div class="mitem">
-        <i><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-7"/><path d="M14 8h6v6"/></svg></i>
-        <div>
-          <b>Leitura mensal dos números</b>
-          <span>Quais buscas trouxeram gente para o site e quais ainda não trazem — com ajuste de meta tags em cima disso.</span>
-        </div>
-      </div>
-      <div class="mitem">
-        <i><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></i>
-        <div>
-          <b>Página ou serviço novo</b>
-          <span>Cada coisa nova que entrar no site já sai estruturada e indexada, sem precisar de retrabalho depois.</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ 06 PRÓXIMOS PASSOS ══ -->
-<section class="sec" id="passos">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <div class="sec-num">06</div>
-      <div class="sec-t">
-        <div class="sec-kicker">Como começamos</div>
-        <h2 class="sec-title">Próximos passos</h2>
-      </div>
-    </div>
-
-    <div class="passos-prog rv">
-      <div class="track"><i id="passos-fill"></i></div>
-      <span id="passos-txt">0 de 4</span>
-    </div>
-
-    <div class="passos rv" id="passos-lista"></div>
-
-    <div class="cta rv">
-      <h3>Podemos seguir com esse formato?</h3>
-      <p>
-        Escopo fechado, preço único, primeira parcela em novembro e cada entrega com prova
-        que você mesmo confere. Estou à disposição para qualquer dúvida.
-      </p>
-      <div class="cta-btns" id="cta-btns"></div>
-    </div>
-  </div>
 </section>
 
 </main>
 
-<footer class="sign">
-  <div class="wrap">
-    <div class="sign-nome">Brayan Rodrigues</div>
-    <div class="sign-cargo">Fundador · Beyond Bits</div>
-    <div class="sign-link"><a href="https://beyond.dev.br" target="_blank" rel="noopener">beyond.dev.br</a></div>
+<!-- ══ TABBAR ══ -->
+<nav class="tabbar" id="tabbar">
+  <button data-goto="resumo" aria-current="true">
+    <svg viewBox="0 0 24 24"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    <span>Resumo</span>
+  </button>
+  <button data-goto="detalhe" aria-current="false">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+    <span>Detalhes</span>
+  </button>
+</nav>
+
+<!-- ══ SHEET ══ -->
+<div class="sheet-bg" id="sheet-bg"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <div class="sheet-grab"><i></i></div>
+  <div class="sheet-head">
+    <div class="sheet-eyebrow" id="sheet-eyebrow"></div>
+    <div class="sheet-title" id="sheet-title"></div>
   </div>
-</footer>
+  <div class="sheet-body" id="sheet-body"></div>
+</div>
 <script>
 /* ╔═══════════════════════════════════════════════════════════════════════╗
-   ║   AJUSTE A PROPOSTA AQUI — o resto da página se monta sozinha         ║
+   ║                                                                       ║
+   ║   👉  TROQUE DE PROJETO AQUI — É SÓ ESTA LINHA                        ║
+   ║                                                                       ║
+   ║   Pode colar o ID curto  ('5yFFzlKE')                                 ║
+   ║   ou o link inteiro      ('https://trello.com/b/5yFFzlKE/meu-quadro') ║
+   ║                                                                       ║
    ╚═══════════════════════════════════════════════════════════════════════╝ */
 
-const PROPOSTA = {
-  cliente:  'Montador de Móveis',
-  validade: '30/09/2026',
+const PROJETO = 'Yi0dumYl';
 
-  pacote: {
-    total:           1200,      // preço único do pacote, em reais
-    maxParcelas:     4,         // em quantas vezes pode dividir
-    primeiraParcela: '2026-11', // ano-mês da primeira cobrança
-  },
+/* Dá também para trocar sem mexer no código, pela URL:
+   index.html?p=5yFFzlKE      (o parâmetro ?p= tem prioridade sobre a linha acima) */
 
-  manutencao: {
-    minimo: 50,   // piso do valor mensal combinado depois da entrega
-  },
 
-  contato: {
-    whatsapp: '5531998022734',
-    email:    'beyondbitsltda@gmail.com',
-  },
+/* ─── Ajustes opcionais (tudo funciona em branco) ─────────────────────────── */
+const CONFIG = {
+  // Credenciais Trello — gere em https://trello.com/power-ups/admin
+  apiKey: 'a70ac6cdf4a0479e97acf7d5976362d3',
+  token : 'ATTA52739b85baef2ee0dd5bccea18da6df885e1d6f436b8aff2165b737050ac80ab372D3C95',
+
+  marca:     'BB',     // sigla do quadradinho no topo
+  titulo:    'SEO Local · Montador de Móveis',
+  descricao: 'Estruturação técnica do site e do perfil no Google Maps. 40 dias úteis, 8 etapas, cada entrega com um número que você confere por conta própria.',
+  recarregarACada: 300, // segundos (0 = desligado). Ex.: 300 recarrega a cada 5 min
 };
 
-/* ═════════════ Daqui para baixo não precisa mexer ═════════════ */
+/* ═══════════════ Daqui para baixo não precisa mexer em nada ═══════════════ */
 
-const $ = s => document.querySelector(s);
-const P = PROPOSTA.pacote;
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g,
+  c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
-const brl = n => 'R$' + " " + n.toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
-const brlInt = n => 'R$' + " " + n.toLocaleString('pt-BR', { maximumFractionDigits:0 });
-/* esconde os centavos só quando eles realmente não existem */
-const brlAuto = n => Math.round(n * 100) % 100 === 0 ? brlInt(n) : brl(n);
+const HOJE = new Date(); HOJE.setHours(0,0,0,0);
+const DIA = 86400000;
 
-/* mês da parcela nº i (0 = primeira) */
-const baseAno = Number(P.primeiraParcela.split('-')[0]);
-const baseMes = Number(P.primeiraParcela.split('-')[1]);
-function dataParcela(i){ return new Date(baseAno, baseMes - 1 + i, 1); }
-function mesCurto(d){ return d.toLocaleDateString('pt-BR', { month:'short' }).replace('.','').toUpperCase(); }
-function mesLongo(d){ return d.toLocaleDateString('pt-BR', { month:'long', year:'numeric' }); }
+const S = { dados:null, view:'resumo', tab:'quadro', q:'', filtro:'todos', etiqueta:null, abertas:new Set() };
 
-/* divide o total sem deixar centavo perdido: a última parcela absorve a sobra */
-function parcelasDe(n){
-  const base = Math.floor(P.total * 100 / n) / 100;
-  const lista = Array.from({ length:n }, () => base);
-  lista[n-1] = Math.round((P.total - base * (n-1)) * 100) / 100;
-  return lista;
+const STATUS = {
+  ok  :{ rot:'Concluído',    cls:'ok',   cor:'var(--ok)'   },
+  late:{ rot:'Atrasado',     cls:'late', cor:'var(--late)' },
+  run :{ rot:'Em andamento', cls:'run',  cor:'var(--run)'  },
+  plan:{ rot:'Planejado',    cls:'plan', cor:'var(--plan)' },
+  none:{ rot:'Sem data',     cls:'none', cor:'var(--none)' },
+};
+const ORDEM_STATUS = ['ok','run','late','plan','none'];
+
+/* Cores nativas das etiquetas do Trello (só para o pontinho colorido) */
+const COR_TRELLO = {
+  green:'#61bd4f', yellow:'#f2d600', orange:'#ff9f1a', red:'#eb5a46', purple:'#c377e0',
+  blue:'#0079bf', sky:'#00c2e0', lime:'#51e898', pink:'#ff80ce', black:'#4d4d4d',
+  green_light:'#7bc86c', yellow_light:'#f5dd29', orange_light:'#ffaf3f', red_light:'#ef7564',
+  purple_light:'#cd8de5', blue_light:'#5ba4cf', sky_light:'#29cce5', lime_light:'#6deca9',
+  pink_light:'#ff8ed4', black_light:'#8c8c8c',
+  green_dark:'#519839', yellow_dark:'#d9b51c', orange_dark:'#d29034', red_dark:'#b04632',
+  purple_dark:'#89609e', blue_dark:'#055a8c', sky_dark:'#0098b7', lime_dark:'#4bbf6b',
+  pink_dark:'#c9558f', black_dark:'#4d4d4d',
+};
+const corEtiqueta = c => COR_TRELLO[c] || 'var(--gray)';
+
+/* ═════════════ UTILITÁRIOS ═════════════ */
+function extrairId(v){
+  v = String(v || '').trim();
+  const m = v.match(/trello\.com\/b\/([A-Za-z0-9]+)/i);
+  if (m) return m[1];
+  return v.replace(/[^A-Za-z0-9]/g, '');
+}
+function idAtual(){
+  const p = new URLSearchParams(location.search);
+  return extrairId(p.get('p') || p.get('quadro') || p.get('board') || PROJETO);
+}
+function dataBR(d){
+  if (!d) return null;
+  return new Date(d).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' });
+}
+function diaMes(d){
+  const x = new Date(d);
+  return { dia:String(x.getDate()).padStart(2,'0'),
+           mes:x.toLocaleDateString('pt-BR',{month:'short'}).replace('.','') };
+}
+function mesAno(d){
+  return new Date(d).toLocaleDateString('pt-BR',{ month:'long', year:'numeric' });
+}
+function diasAte(d){ return Math.round((new Date(d).setHours(0,0,0,0) - HOJE) / DIA); }
+function textoPrazo(d){
+  const n = diasAte(d);
+  if (n === 0)  return 'Hoje';
+  if (n === 1)  return 'Amanhã';
+  if (n === -1) return 'Ontem';
+  if (n < 0)    return Math.abs(n) + ' dias em atraso';
+  if (n <= 30)  return 'Em ' + n + ' dias';
+  return dataBR(d);
+}
+function limpo(t){
+  return String(t || '').replace(/[#*_`>]/g,'').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/\s+/g,' ').trim();
+}
+function plural(n, um, muitos){ return n + ' ' + (n === 1 ? um : muitos); }
+
+/* Markdown simples → HTML (Trello aceita markdown nas descrições) */
+function md(txt){
+  if (!txt) return '';
+  const guard = [];
+  let s = esc(txt).replace(/\r\n/g,'\n');
+
+  s = s.replace(/```([\s\S]*?)```/g, (m,c) => {
+    guard.push('<pre><code>' + c.replace(/^\n|\n$/g,'') + '</code></pre>');
+    return '\u0001' + (guard.length-1) + '\u0001';
+  });
+  s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  s = s.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, (m,t,u) => {
+    guard.push('<a href="' + u + '" target="_blank" rel="noopener">' + t + '</a>');
+    return '\u0001' + (guard.length-1) + '\u0001';
+  });
+  s = s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g, (m,p,u) =>
+    p + '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>');
+  s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+
+  const linhas = s.split('\n');
+  let out = '', lista = null, buf = [];
+  const fechaP = () => { if (buf.length){ out += '<p>' + buf.join('<br>') + '</p>'; buf = []; } };
+  const fechaL = () => { if (lista){ out += '</' + lista + '>'; lista = null; } };
+
+  for (const bruta of linhas){
+    const l = bruta.trim();
+    if (!l){ fechaP(); fechaL(); continue; }
+    if (/^-{3,}$/.test(l) || /^={3,}$/.test(l)){ fechaP(); fechaL(); out += '<hr>'; continue; }
+    const h = l.match(/^#{1,6}\s+(.*)$/);
+    if (h){ fechaP(); fechaL(); out += '<h3>' + h[1] + '</h3>'; continue; }
+    const ul = l.match(/^[-*+]\s+(.*)$/);
+    if (ul){ fechaP(); if (lista !== 'ul'){ fechaL(); out += '<ul>'; lista = 'ul'; } out += '<li>' + ul[1] + '</li>'; continue; }
+    const ol = l.match(/^\d+[.)]\s+(.*)$/);
+    if (ol){ fechaP(); if (lista !== 'ol'){ fechaL(); out += '<ol>'; lista = 'ol'; } out += '<li>' + ol[1] + '</li>'; continue; }
+    fechaL(); buf.push(l);
+  }
+  fechaP(); fechaL();
+  return out.replace(/\u0001(\d+)\u0001/g, (m,i) => guard[+i]);
 }
 
-/* ── Identificação ── */
-$('#cli-nome').textContent = PROPOSTA.cliente;
-$('#meta-cliente').textContent = PROPOSTA.cliente;
-$('#meta-valor').textContent = brlInt(P.total);
-$('#meta-validade').textContent = PROPOSTA.validade;
-$('#pull-valor').textContent = brlInt(P.total);
-$('#pull-mes').textContent = mesLongo(dataParcela(0));
-$('#pull-manut').textContent = brlInt(PROPOSTA.manutencao.minimo) + ' / mês';
-$('#manut-valor').textContent = brlInt(PROPOSTA.manutencao.minimo) + ' por mês';
-document.title = 'Proposta · SEO e Performance Web · ' + PROPOSTA.cliente;
-
-/* ── 02 · O que está no pacote ── */
-const PACOTE = [
-  {
-    nome: 'Auditoria e correção de código',
-    tag: 'Semântica e estrutura',
-    desc: 'Revisão e correção da semântica do site: organização correta de títulos, textos e links para os robôs de busca.',
-    pratica: 'O Google passa a entender do que cada página fala, em vez de adivinhar.',
-  },
-  {
-    nome: 'Performance e velocidade',
-    tag: 'Tempo de carregamento',
-    desc: 'Aplicação de boas práticas de desenvolvimento para reduzir o tempo de carregamento das páginas.',
-    pratica: 'Página que abre rápido é página que o Google prefere mostrar — e que o cliente não abandona no meio do caminho.',
-  },
-  {
-    nome: 'Mapeamento e meta tags',
-    tag: 'O que aparece na busca',
-    desc: 'Redação e configuração dos títulos e descrições que aparecem nos resultados de busca do Google, para todas as páginas principais.',
-    pratica: 'É o texto embaixo do link azul na busca. É ele que faz alguém clicar em você em vez do concorrente.',
-  },
-  {
-    nome: 'Integração das ferramentas do Google',
-    tag: 'Search Console + GA4',
-    desc: 'Criação, verificação e vinculação do site aos painéis oficiais de leitura de tráfego: Google Search Console e Google Analytics 4.',
-    pratica: 'Sem isso não existe medição. É como reformar a loja sem contar quantas pessoas entraram.',
-  },
-  {
-    nome: 'Relatórios de antes e depois',
-    tag: 'A prova do trabalho',
-    desc: 'Dois documentos com data: o estado do site antes de qualquer alteração e o estado dele no fim do pacote, número por número.',
-    pratica: 'É o que separa trabalho entregue de trabalho prometido. Toda linha aponta para um lugar que você mesmo pode abrir.',
-  },
-];
-
-$('#pacote-lista').innerHTML = PACOTE.map((e,i) => `
-  <article class="deliv rv">
-    <button class="deliv-head" type="button" aria-expanded="false">
-      <span class="deliv-idx">${String(i+1).padStart(2,'0')}</span>
-      <span class="deliv-t">
-        <span class="deliv-name">${e.nome}</span>
-        <span class="deliv-tag">${e.tag}</span>
-      </span>
-      <span class="deliv-plus" aria-hidden="true"></span>
-    </button>
-    <div class="deliv-body">
-      <p>${e.desc}</p>
-      <div class="pratica"><b>Na prática</b><span>${e.pratica}</span></div>
-    </div>
-  </article>
-`).join('');
-
-/* ── 03 · Entregáveis e como conferir ── */
-const PROVAS = [
-  {
-    nome: 'Relatório “Antes”',
-    quando: 'Marco zero · antes de qualquer alteração',
-    oque: 'Documento com data registrando o estado do site no dia zero: erros de indexação, nota de velocidade, páginas fora do índice do Google e meta tags ausentes.',
-    confere: 'Você recebe esse relatório <strong>antes</strong> de eu mexer em qualquer coisa. É ele que transforma o resultado final em comparação, e não em promessa.',
-  },
-  {
-    nome: 'Nota de velocidade do Google',
-    quando: 'Medida no início e no fim',
-    oque: 'A nota oficial do Google para a velocidade do seu site, no computador e no celular.',
-    confere: 'Abra <code>pagespeed.web.dev</code>, cole o endereço do site e rode o teste. O número é do Google, não meu — e você compara com o do marco zero.',
-  },
-  {
-    nome: 'Páginas indexadas',
-    quando: 'Acompanhável a qualquer momento',
-    oque: 'Quantas páginas do site o Google efetivamente tem registradas no índice dele.',
-    confere: 'Digite <code>site:seusite.com.br</code> na busca do Google. O total que aparece é a resposta, e você pode checar quantas vezes quiser.',
-  },
-  {
-    nome: 'Meta tags no ar',
-    quando: 'Entrega dentro do pacote',
-    oque: 'Título e descrição escritos e publicados em cada página principal do site.',
-    confere: 'Pesquise o nome do seu negócio no Google. O texto que aparece embaixo do link azul é exatamente o que eu escrevi. Se está lá, está entregue.',
-  },
-  {
-    nome: 'Search Console e GA4 ativos',
-    quando: 'Entrega no primeiro mês',
-    oque: 'As duas ferramentas oficiais do Google criadas, verificadas e vinculadas ao site — com você como proprietário das contas.',
-    confere: 'Você entra com a sua própria conta Google e vê os dados. O acesso é seu; eu entro como convidado e você pode me remover quando quiser.',
-  },
-  {
-    nome: 'Relatório “Depois”',
-    quando: 'Entrega no fim do pacote',
-    oque: 'O mesmo documento do marco zero, lado a lado, com o antes e o depois de cada número — incluindo impressões e cliques do Search Console.',
-    confere: 'Cada linha aponta para um lugar que você pode abrir sozinho. Se algum número do relatório não puder ser conferido por você, ele não deveria estar ali.',
-  },
-];
-
-const OLHO = '<svg viewBox="0 0 24 24"><path d="M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
-
-$('#provas-lista').innerHTML = PROVAS.map((p,i) => `
-  <article class="prova">
-    <div class="prova-h">
-      <div class="prova-i">${String(i+1).padStart(2,'0')}</div>
-      <div class="prova-tt">
-        <div class="prova-n">${p.nome}</div>
-        <div class="prova-q">${p.quando}</div>
-      </div>
-    </div>
-    <p class="prova-o">${p.oque}</p>
-    <div class="confere">
-      <b>${OLHO}Como você confere</b>
-      <span>${p.confere}</span>
-    </div>
-  </article>
-`).join('');
-
-/* ── 04 · Preço único e parcelamento ── */
-const CHECK = '<svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>';
-$('#unico-valor').textContent = brlInt(P.total);
-$('#unico-parc').textContent = 'ou até ' + P.maxParcelas + '× de '
-  + brl(parcelasDe(P.maxParcelas)[0]) + ' sem juros';
-$('#unico-tags').innerHTML = [
-  'Escopo fechado',
-  'Sem juros',
-  '1ª parcela em ' + mesCurto(dataParcela(0)).toLowerCase() + '/' + baseAno,
-].map(t => '<span class="utag">' + CHECK + t + '</span>').join('');
-
-$('#parc-opts').innerHTML = Array.from({ length:P.maxParcelas }, (_,i) => {
-  const n = i + 1;
-  return `<button class="parc-btn" type="button" data-n="${n}" aria-pressed="${n === P.maxParcelas}">
-    <b>${n}×</b><span>${n === 1 ? 'à vista' : 'parcelas'}</span>
-  </button>`;
-}).join('');
-
-$('#cal').innerHTML = Array.from({ length:P.maxParcelas }, (_,i) => {
-  const d = dataParcela(i);
-  return `<div class="cal-m" data-slot="${i}">
-    <b>${i+1}ª · ${mesCurto(d)}</b><span></span>
-  </div>`;
-}).join('');
-
-function atualizarParc(n){
-  const valores = parcelasDe(n);
-
-  document.querySelectorAll('#parc-opts .parc-btn').forEach(b => {
-    b.setAttribute('aria-pressed', String(Number(b.dataset.n) === n));
-  });
-
-  document.querySelectorAll('#cal .cal-m').forEach(m => {
-    const i = Number(m.dataset.slot);
-    const dentro = i < n;
-    m.classList.toggle('on', dentro);
-    m.classList.toggle('off', !dentro);
-    m.querySelector('span').textContent = dentro ? brlAuto(valores[i]) : '—';
-  });
-
-  $('#kpi-parcela').textContent = n === 1 ? brl(P.total) : n + '× ' + brl(valores[0]);
-  $('#unico-parc').textContent = 'ou até ' + P.maxParcelas + '× de '
-    + brl(parcelasDe(P.maxParcelas)[0]) + ' sem juros';
-  $('#kpi-total').textContent = brl(P.total);
-  $('#kpi-primeira').textContent = mesCurto(dataParcela(0)) + '/' + String(baseAno).slice(2);
-
-  const meses = Array.from({ length:n }, (_,i) => mesCurto(dataParcela(i)).toLowerCase());
-  const lista = meses.length === 1 ? meses[0]
-    : meses.slice(0,-1).join(', ') + ' e ' + meses[meses.length-1];
-  const ultima = valores[n-1];
-  const sobra = (n > 1 && Math.round(ultima * 100) !== Math.round(valores[0] * 100))
-    ? ' A última fica em ' + brl(ultima) + ' para fechar o total exato.' : '';
-  $('#parc-resumo').textContent = n === 1
-    ? 'Pagamento único de ' + brl(P.total) + ' em ' + mesLongo(dataParcela(0)) + '.'
-    : n + ' parcelas de ' + brl(valores[0]) + ' em ' + lista + '. Total de '
-      + brl(P.total) + ', sem juros.' + sobra;
+/* ═════════════ API TRELLO ═════════════ */
+async function api(caminho, params){
+  const qs = new URLSearchParams(Object.assign({ key:CONFIG.apiKey, token:CONFIG.token }, params || {}));
+  const r = await fetch('https://api.trello.com/1' + caminho + '?' + qs.toString());
+  if (!r.ok){
+    const e = new Error('HTTP ' + r.status);
+    e.status = r.status;
+    e.corpo = await r.text().catch(() => '');
+    throw e;
+  }
+  return r.json();
 }
 
-$('#parc-opts').addEventListener('click', e => {
-  const b = e.target.closest('[data-n]');
-  if (b) atualizarParc(Number(b.dataset.n));
-});
-atualizarParc(P.maxParcelas);
+function boot(txt){ $('#boot').classList.remove('off'); $('#boot-txt').textContent = txt; }
+function falhar(msg, codigo){
+  $('#boot').classList.add('off');
+  $('#fail').classList.remove('off');
+  $('#fail-msg').textContent = msg;
+  const c = $('#fail-code');
+  c.hidden = !codigo;
+  if (codigo) c.textContent = codigo;
+  $('#fail-input').value = idAtual();
+}
 
-/* ── 06 · Próximos passos ── */
-const PASSOS = [
-  { t:'Você confirma o formato desta proposta', s:'Um “pode seguir” por mensagem já vale.' },
-  { t:'Preparo o checklist de acessos',          s:'Lista objetiva do que preciso: painel do site, domínio e uma conta Google para as ferramentas.' },
-  { t:'Você libera os acessos e eu registro o marco zero', s:'Esse é o dia zero. Nada é alterado no site antes de o relatório “Antes” estar na sua mão.' },
-  { t:'Primeira parcela em ' + mesLongo(dataParcela(0)), s:'O trabalho já está rodando quando a primeira cobrança chega.' },
-];
+async function carregar(){
+  const id = idAtual();
+  if (!id) return falhar('Nenhum quadro configurado. Cole o ID (ou o link) do quadro do Trello abaixo.', 'const PROJETO = \'\';');
+  if (!CONFIG.apiKey || !CONFIG.token) return falhar('Faltam as credenciais do Trello em CONFIG (apiKey e token).');
 
-$('#passos-lista').innerHTML = PASSOS.map((p,i) => `
-  <button class="passo" type="button" data-passo="${i}" aria-pressed="false">
-    <span class="passo-box" aria-hidden="true"></span>
-    <span class="passo-t">
-      <span class="passo-n">Passo ${String(i+1).padStart(2,'0')}</span>
-      <span class="passo-d">${p.t}</span>
-      <span class="passo-sub">${p.s}</span>
-    </span>
-  </button>
-`).join('');
+  $('#fail').classList.add('off');
+  boot('Conectando ao Trello…');
 
-$('#passos-lista').addEventListener('click', e => {
-  const b = e.target.closest('[data-passo]');
-  if (!b) return;
-  const feito = b.classList.toggle('feito');
-  b.setAttribute('aria-pressed', String(feito));
-  const n = document.querySelectorAll('.passo.feito').length;
-  $('#passos-fill').style.width = (n / PASSOS.length * 100) + '%';
-  $('#passos-txt').textContent = n + ' de ' + PASSOS.length;
-});
+  try {
+    const quadro = await api('/boards/' + id, { fields:'name,desc,url,shortUrl,shortLink,dateLastActivity,closed' });
+    boot('Lendo etapas e cartões…');
 
-/* ── CTA ── */
-(function montarCta(){
-  const c = PROPOSTA.contato;
-  const msg = encodeURIComponent(
-    'Oi Brayan! Li a proposta de SEO e Performance Web e podemos seguir com esse formato.');
-  const btns = [];
-  if (c.whatsapp){
-    btns.push(`<a class="btn" href="https://wa.me/${c.whatsapp}?text=${msg}" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>Aceitar e seguir</a>`);
+    const [listas, cartoes, etiquetas] = await Promise.all([
+      api('/boards/' + id + '/lists',  { filter:'open', fields:'name,pos' }),
+      api('/boards/' + id + '/cards',  {
+        filter:'open',
+        fields:'name,desc,due,start,dueComplete,idList,labels,shortUrl,url,pos,badges,idMembers',
+        checklists:'all', checklist_fields:'name',
+        members:'true', member_fields:'fullName,initials',
+        customFieldItems:'true',
+      }),
+      api('/boards/' + id + '/labels', { fields:'name,color', limit:'1000' }).catch(() => []),
+    ]);
+
+    let campos = [];
+    try { campos = await api('/boards/' + id + '/customFields', {}); } catch(e){ campos = []; }
+
+    S.dados = normalizar({ quadro, listas, cartoes, etiquetas, campos });
+    if (!S.abertas.size){
+      const atual = S.dados.listas.find(l => l.cartoes.length && l.pct < 100) || S.dados.listas[0];
+      if (atual) S.abertas.add(atual.id);
+    }
+    renderTudo();
+    $('#boot').classList.add('off');
+    document.title = (CONFIG.titulo || quadro.name || 'Painel do Projeto');
+  } catch (err){
+    let msg = 'Erro ao falar com a API do Trello.';
+    if (err.status === 400) msg = 'ID de quadro inválido (400). Confira o ID copiado da URL do Trello — é a parte depois de /b/.';
+    else if (err.status === 401) msg = 'Credenciais recusadas (401). Verifique apiKey e token em CONFIG — o token pode ter expirado.';
+    else if (err.status === 404) msg = 'Quadro não encontrado (404). Confira o ID e se o token tem acesso a ele.';
+    else if (err.status === 429) msg = 'Muitas requisições (429). Aguarde alguns segundos e recarregue.';
+    else if (err.message === 'Failed to fetch') msg = 'Sem resposta da API. Verifique a conexão / proxy da rede.';
+    falhar(msg + '\n\nQuadro solicitado: ' + id, err.corpo ? String(err.corpo).slice(0,300) : null);
+    console.error(err);
   }
-  if (c.email){
-    btns.push(`<a class="btn ghost" href="mailto:${c.email}?subject=${encodeURIComponent('Proposta SEO — ' + PROPOSTA.cliente)}">
-      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Tenho uma dúvida</a>`);
-  }
-  if (!btns.length){
-    btns.push(`<a class="btn" href="#contexto">
-      <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>Rever a proposta</a>`);
-  }
-  $('#cta-btns').innerHTML = btns.join('');
-})();
+}
 
-/* ── Acordeão ── */
+/* ═════════════ NORMALIZAÇÃO (adaptativa: nada é assumido) ═════════════ */
+// Palavras que, no nome de uma COLUNA ou de uma ETIQUETA, indicam trabalho encerrado.
+// É o único "palpite" que o painel dá — e ele é mostrado na aba Sobre.
+const RX_FEITO = /(conclu[ií]|finaliz|entregue|encerrad|feito|pronto|done|complete|aprovad)/i;
+
+function normalizar(raw){
+  // Só entra o que está ativo no quadro. Colunas arquivadas não vêm da API (filter=open)
+  // e os cartões que moram dentro delas são descartados logo abaixo.
+  const listas = (raw.listas || []).slice().sort((a,b) => a.pos - b.pos)
+    .map((l,i) => ({ id:l.id, nome:l.name, indice:i+1 }));
+  const porId = {};
+  listas.forEach(l => porId[l.id] = l);
+
+  const colunasFeitas = new Set(listas.filter(l => RX_FEITO.test(l.nome)).map(l => l.id));
+  const etiquetasFeitas = new Set((raw.etiquetas || []).filter(l => l.name && RX_FEITO.test(l.name)).map(l => l.id));
+
+  const defCampos = {};
+  (raw.campos || []).forEach(f => {
+    defCampos[f.id] = {
+      nome: f.name,
+      tipo: f.type,
+      opcoes: (f.options || []).reduce((a,o) => (a[o.id] = (o.value && o.value.text) || '', a), {}),
+    };
+  });
+
+  const cartoes = (raw.cartoes || []).filter(c => porId[c.idList]).map(c => {
+    let feitos = 0, total = 0;
+    const checklists = (c.checklists || []).map(cl => {
+      const itens = (cl.checkItems || [])
+        .slice().sort((a,b) => a.pos - b.pos)
+        .map(i => ({ nome:i.name, feito:i.state === 'complete' }));
+      feitos += itens.filter(i => i.feito).length;
+      total  += itens.length;
+      return { nome:cl.name, itens };
+    });
+
+    const campos = (c.customFieldItems || []).map(it => {
+      const d = defCampos[it.idCustomField];
+      if (!d) return null;
+      const v = it.value || {};
+      let valor = '';
+      if (it.idValue) valor = d.opcoes[it.idValue] || '';
+      else if (v.text !== undefined) valor = v.text;
+      else if (v.number !== undefined) valor = v.number;
+      else if (v.date !== undefined) valor = dataBR(v.date);
+      else if (v.checked !== undefined) valor = (v.checked === 'true' ? 'Sim' : 'Não');
+      if (valor === '' || valor == null) return null;
+      return { nome:d.nome, valor:String(valor) };
+    }).filter(Boolean);
+
+    const lista = porId[c.idList];
+    const card = {
+      id: c.id,
+      nome: c.name || '(sem título)',
+      desc: c.desc || '',
+      due: c.due || null,
+      start: c.start || null,
+      dueComplete: c.dueComplete === true,
+      idLista: c.idList,
+      lista: lista.nome,
+      etiquetas: (c.labels || []).map(l => ({ id:l.id, nome:l.name || '', cor:l.color || null })),
+      membros: (c.members || []).map(m => m.fullName || m.initials || ''),
+      checklists, chkFeitos:feitos, chkTotal:total,
+      campos,
+      comentarios: (c.badges && c.badges.comments) || 0,
+      anexos: (c.badges && c.badges.attachments) || 0,
+      url: c.shortUrl || c.url || '',
+      pos: c.pos,
+    };
+    card.status = derivarStatus(card, colunasFeitas, etiquetasFeitas);
+    return card;
+  }).sort((a,b) => a.pos - b.pos);
+
+  // etiquetas do quadro + qualquer uma que apareça só nos cartões
+  const mapaEtq = {};
+  (raw.etiquetas || []).forEach(l => mapaEtq[l.id] = { id:l.id, nome:l.name || '', cor:l.color || null });
+  cartoes.forEach(c => c.etiquetas.forEach(l => { if (!mapaEtq[l.id]) mapaEtq[l.id] = l; }));
+
+  const etiquetas = Object.values(mapaEtq).map(l => {
+    const usados = cartoes.filter(c => c.etiquetas.some(x => x.id === l.id));
+    return Object.assign({}, l, { total:usados.length, feitos:usados.filter(c => c.status === 'ok').length });
+  }).filter(l => l.total > 0 || l.nome)
+    .sort((a,b) => b.total - a.total || a.nome.localeCompare(b.nome));
+
+  listas.forEach(l => {
+    l.cartoes = cartoes.filter(c => c.idLista === l.id);
+    l.feitos  = l.cartoes.filter(c => c.status === 'ok').length;
+    l.pct     = l.cartoes.length ? Math.round(l.feitos / l.cartoes.length * 100) : 0;
+    const datas = l.cartoes.filter(c => c.due).map(c => new Date(c.due));
+    if (!datas.length) l.periodo = null;
+    else {
+      const ini = dataBR(new Date(Math.min.apply(null, datas)));
+      const fim = dataBR(new Date(Math.max.apply(null, datas)));
+      l.periodo = ini === fim ? ini : ini + ' – ' + fim;
+    }
+  });
+
+  const contagem = {};
+  ORDEM_STATUS.forEach(k => contagem[k] = cartoes.filter(c => c.status === k).length);
+
+  return {
+    quadro: raw.quadro,
+    listas, cartoes, etiquetas, contagem,
+    colunasFeitas, etiquetasFeitas,
+    campos: raw.campos || [],
+    total: cartoes.length,
+    feitos: contagem.ok,
+    pct: cartoes.length ? Math.round(contagem.ok / cartoes.length * 100) : 0,
+  };
+}
+
+function derivarStatus(c, colunasFeitas, etiquetasFeitas){
+  if (c.dueComplete) return 'ok';
+  if (colunasFeitas.has(c.idLista)) return 'ok';
+  if (c.etiquetas.some(l => etiquetasFeitas.has(l.id))) return 'ok';
+  if (c.chkTotal > 0 && c.chkFeitos === c.chkTotal) return 'ok';
+  if (!c.due) return 'none';
+  const n = diasAte(c.due);
+  if (n < 0) return 'late';
+  if (c.start && new Date(c.start).setHours(0,0,0,0) <= HOJE.getTime()) return 'run';
+  if (n <= 7) return 'run';
+  return 'plan';
+}
+
+/* ═════════════ PEÇAS DE UI ═════════════ */
+function chipEtiqueta(l){
+  return '<span class="tag">' + (l.cor ? '<i style="background:' + corEtiqueta(l.cor) + '"></i>' : '') +
+         esc(l.nome || (l.cor ? l.cor : 'etiqueta')) + '</span>';
+}
+function pillStatus(st){
+  const s = STATUS[st];
+  return '<span class="pill ' + s.cls + '">' + s.rot + '</span>';
+}
+function htmlTarefa(c){
+  const s = STATUS[c.status];
+  const desc = limpo(c.desc);
+  let pe = '';
+  if (c.due) pe = '<span class="mini ' + (c.status === 'late' ? 'late' : (c.status === 'ok' ? 'ok' : '')) + '">' +
+    '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>' +
+    esc(dataBR(c.due)) + '</span>';
+  let ck = '';
+  if (c.chkTotal) ck = '<span class="mini"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>' +
+    c.chkFeitos + '/' + c.chkTotal + '</span>';
+  return '<button class="task" data-card="' + c.id + '">' +
+    '<span class="task-mark ' + s.cls + '"></span>' +
+    '<span class="task-b">' +
+      '<span class="task-name ' + (c.status === 'ok' ? 'done' : '') + '">' + esc(c.nome) + '</span>' +
+      (desc ? '<span class="task-desc">' + esc(desc) + '</span>' : '') +
+      '<span class="task-foot">' + pe + ck +
+        c.etiquetas.map(chipEtiqueta).join('') +
+      '</span>' +
+    '</span>' +
+  '</button>';
+}
+function vazio(txt){
+  return '<div class="empty"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg><p>' + esc(txt) + '</p></div>';
+}
+
+/* ═════════════ RENDER: RESUMO ═════════════ */
+function renderResumo(){
+  const d = S.dados, q = d.quadro;
+
+  $('#mark').textContent = (CONFIG.marca || 'D').slice(0,4).toUpperCase();
+  $('#top-title').textContent = CONFIG.titulo || q.name || 'Projeto';
+  $('#top-sub').textContent = plural(d.listas.length,'etapa','etapas') + ' · ' + plural(d.total,'cartão','cartões');
+
+  $('#p-title').textContent = CONFIG.titulo || q.name || 'Projeto';
+  const desc = CONFIG.descricao || limpo((q.desc || '').split('\n\n')[0]);
+  $('#p-desc').textContent = desc;
+  $('#p-desc').style.display = desc ? '' : 'none';
+
+  $('#live-txt').textContent = q.dateLastActivity
+    ? 'Atualizado em ' + dataBR(q.dateLastActivity)
+    : 'Dados ao vivo do Trello';
+
+  // Progresso
+  const pct = d.pct, circ = 2 * Math.PI * 43;
+  $('#ring-val').textContent = pct + '%';
+  requestAnimationFrame(() => {
+    $('#ring-fg').setAttribute('stroke-dasharray', (circ * pct / 100) + ' ' + circ);
+  });
+  $('#prog-meta').textContent = d.feitos + ' de ' + d.total;
+  const restam = d.total - d.feitos;
+  $('#prog-big').textContent = restam === 0 && d.total
+    ? 'Todos os cartões concluídos'
+    : plural(restam, 'cartão em aberto', 'cartões em aberto');
+  const proximos = d.cartoes.filter(c => c.status !== 'ok' && c.due && diasAte(c.due) >= 0 && diasAte(c.due) <= 7).length;
+  $('#prog-small').textContent = d.contagem.late
+    ? plural(d.contagem.late, 'cartão atrasado', 'cartões atrasados')
+    : (proximos ? plural(proximos,'entrega','entregas') + ' nos próximos 7 dias' : 'Nenhum prazo vencido');
+
+  $('#segbar').innerHTML = ORDEM_STATUS.filter(k => d.contagem[k])
+    .map(k => '<i style="flex:' + d.contagem[k] + ';background:' + STATUS[k].cor + '"></i>').join('');
+  $('#legend').innerHTML = ORDEM_STATUS.filter(k => d.contagem[k])
+    .map(k => '<span><i style="background:' + STATUS[k].cor + '"></i>' + STATUS[k].rot + ' ' + d.contagem[k] + '</span>').join('');
+
+  // Números
+  $('#stats').innerHTML = [
+    { n:d.listas.length,     r:'Etapas',      c:'acc'  },
+    { n:d.total,             r:'Cartões',     c:''     },
+    { n:d.contagem.ok,       r:'Concluídos',  c:'ok'   },
+    { n:d.contagem.late,     r:'Atrasados',   c:d.contagem.late ? 'late' : '' },
+  ].map(s => '<div class="stat ' + s.c + '"><b>' + s.n + '</b><span>' + s.r + '</span></div>').join('');
+
+  // Alerta de atraso
+  $('#alert-slot').innerHTML = d.contagem.late
+    ? '<div class="alert"><svg viewBox="0 0 24 24"><path d="M12 9v5M12 18h.01"/><path d="M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>' +
+      '<div><div class="alert-t">' + plural(d.contagem.late,'cartão com prazo vencido','cartões com prazo vencido') + '</div>' +
+      '<div class="alert-d">Toque em “Ver detalhamento completo” e filtre por Atrasados.</div></div></div>'
+    : '';
+
+  // Próximos prazos
+  const prox = d.cartoes.filter(c => c.status !== 'ok' && c.due)
+    .sort((a,b) => new Date(a.due) - new Date(b.due)).slice(0,5);
+  $('#next-rows').innerHTML = prox.length ? prox.map(c => {
+    const dm = diaMes(c.due), atras = c.status === 'late';
+    return '<button class="row" data-card="' + c.id + '">' +
+      '<span class="row-date ' + (atras ? 'late' : '') + '"><b>' + dm.dia + '</b><span>' + esc(dm.mes) + '</span></span>' +
+      '<span class="row-body"><span class="row-name">' + esc(c.nome) + '</span>' +
+      '<span class="row-sub">' + esc(textoPrazo(c.due)) + (c.lista ? ' · ' + esc(c.lista) : '') + '</span></span>' +
+      '<span class="row-tail"><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>' +
+    '</button>';
+  }).join('') : vazio('Nenhum prazo definido nos cartões em aberto.');
+
+  // Etapas
+  $('#cols-meta').textContent = d.listas.length + ' no total';
+  $('#cols-rows').innerHTML = d.listas.length ? d.listas.map(l =>
+    '<div class="col-item">' +
+      '<div class="col-top"><div class="col-name">' + esc(l.nome) + '</div>' +
+      '<div class="col-num">' + l.feitos + '/' + l.cartoes.length + '</div></div>' +
+      '<div class="bar"><i data-w="' + l.pct + '"></i></div>' +
+    '</div>').join('') : vazio('Este quadro não tem colunas abertas.');
+
+  requestAnimationFrame(() => $$('#cols-rows .bar i').forEach(i => i.style.width = i.dataset.w + '%'));
+}
+
+/* ═════════════ RENDER: DETALHE ═════════════ */
+function filtrados(lista){
+  const q = S.q.trim().toLowerCase();
+  return lista.filter(c => {
+    if (S.filtro !== 'todos' && c.status !== S.filtro) return false;
+    if (S.etiqueta === '__sem__' && c.etiquetas.length) return false;
+    if (S.etiqueta && S.etiqueta !== '__sem__' && !c.etiquetas.some(l => l.id === S.etiqueta)) return false;
+    if (q){
+      const alvo = (c.nome + ' ' + c.desc + ' ' + c.lista + ' ' +
+        c.etiquetas.map(l => l.nome).join(' ') + ' ' +
+        c.campos.map(f => f.nome + ' ' + f.valor).join(' ')).toLowerCase();
+      if (!alvo.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function renderChips(){
+  const d = S.dados;
+  let h = '<button class="chip" data-filtro="todos" aria-pressed="' + (S.filtro === 'todos') + '">Todos <b>' + d.total + '</b></button>';
+  ORDEM_STATUS.forEach(k => {
+    if (!d.contagem[k]) return;
+    h += '<button class="chip" data-filtro="' + k + '" aria-pressed="' + (S.filtro === k) + '">' +
+         STATUS[k].rot + ' <b>' + d.contagem[k] + '</b></button>';
+  });
+  if (S.etiqueta){
+    const et = S.etiqueta === '__sem__'
+      ? { nome:'Sem etiqueta', cor:null }
+      : (d.etiquetas.find(l => l.id === S.etiqueta) || { nome:'Etiqueta', cor:null });
+    h += '<button class="chip" data-limpar-etq="1" aria-pressed="true">' +
+         esc(et.nome || et.cor || 'etiqueta') + ' ✕</button>';
+  }
+  $('#chips').innerHTML = h;
+}
+
+function renderQuadro(){
+  const d = S.dados;
+  const cont = $('#tab-quadro');
+  const filtrando = S.q.trim() || S.filtro !== 'todos' || S.etiqueta;
+  let algum = false;
+
+  const html = d.listas.map(l => {
+    const cs = filtrados(l.cartoes);
+    if (!cs.length && filtrando) return '';
+    algum = algum || cs.length > 0;
+    const aberta = S.abertas.has(l.id) || filtrando;
+    const sub = [ plural(cs.length,'cartão','cartões'), l.periodo ].filter(Boolean).join(' · ');
+    return '<section class="acc ' + (aberta ? 'open' : '') + '" data-lista="' + l.id + '">' +
+      '<button class="acc-head" data-toggle="' + l.id + '">' +
+        '<span class="acc-idx">' + String(l.indice).padStart(2,'0') + '</span>' +
+        '<span class="acc-t"><span class="acc-name">' + esc(l.nome) + '</span>' +
+        '<span class="acc-sub">' + esc(sub) + '</span></span>' +
+        '<span class="pill ' + (l.pct === 100 ? 'ok' : 'none') + '">' + l.pct + '%</span>' +
+        '<svg class="acc-arrow" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>' +
+      '</button>' +
+      '<div class="acc-bar"><i data-w="' + l.pct + '"></i></div>' +
+      '<div class="acc-body">' + (cs.length ? cs.map(htmlTarefa).join('') : vazio('Nenhum cartão nesta etapa.')) + '</div>' +
+    '</section>';
+  }).join('');
+
+  cont.innerHTML = html && algum ? html : vazio(filtrando ? 'Nada encontrado com esses filtros.' : 'Este quadro está vazio.');
+  requestAnimationFrame(() => $$('#tab-quadro .acc-bar i').forEach(i => i.style.width = i.dataset.w + '%'));
+}
+
+function renderPrazos(){
+  const todos = filtrados(S.dados.cartoes);
+  const comData = todos.filter(c => c.due).sort((a,b) => new Date(a.due) - new Date(b.due));
+  const semData = todos.filter(c => !c.due);
+
+  const grupos = [];
+  comData.forEach(c => {
+    const m = mesAno(c.due);
+    if (!grupos.length || grupos[grupos.length-1].mes !== m) grupos.push({ mes:m, itens:[] });
+    grupos[grupos.length-1].itens.push(c);
+  });
+
+  const marcoHoje = '<div class="today-line"><i></i><span>Hoje &middot; ' + esc(dataBR(HOJE)) + '</span><i></i></div>';
+  let h = '', marcou = false;
+
+  grupos.forEach(g => {
+    h += '<div class="tl-month">' + esc(g.mes) + '</div><div class="tl-list">';
+    g.itens.forEach(c => {
+      if (!marcou && diasAte(c.due) >= 0){ h += marcoHoje; marcou = true; }
+      const cls = c.status === 'ok' ? 'ok' : (c.status === 'late' ? 'late' : '');
+      const dt = dataBR(c.due), rel = textoPrazo(c.due);
+      h += '<button class="tl-item ' + cls + '" data-card="' + c.id + '">' +
+        '<span class="tl-d">' + esc(dt) +
+          (c.status === 'ok' || rel === dt ? '' : ' &middot; ' + esc(rel)) + '</span>' +
+        '<span class="tl-n ' + (c.status === 'ok' ? 'done' : '') + '">' + esc(c.nome) + '</span>' +
+        (c.lista ? '<span class="tl-c">' + esc(c.lista) + '</span>' : '') +
+      '</button>';
+    });
+    h += '</div>';
+  });
+  if (comData.length && !marcou) h += marcoHoje;
+
+  if (semData.length){
+    h += '<div class="tl-month">Sem data definida</div>' +
+         '<div class="card" style="margin-top:4px">' + semData.map(htmlTarefa).join('') + '</div>';
+  }
+
+  $('#tab-prazos').innerHTML = h || vazio('Nenhum cartão para exibir com esses filtros.');
+}
+
+function renderEtiquetas(){
+  const d = S.dados;
+  const semEtq = d.cartoes.filter(c => !c.etiquetas.length).length;
+  let h = '<div class="card"><div class="card-head"><div class="card-title">Etiquetas do quadro</div>' +
+          '<div class="card-meta">' + d.etiquetas.length + '</div></div>';
+
+  if (!d.etiquetas.length){
+    h += vazio('Este quadro não usa etiquetas.');
+  } else {
+    h += d.etiquetas.map(l => {
+      const pct = l.total ? Math.round(l.feitos / l.total * 100) : 0;
+      return '<button class="col-item" style="width:100%;text-align:left;display:block" data-etq="' + l.id + '">' +
+        '<div class="col-top"><div class="col-name">' +
+          (l.cor ? '<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + corEtiqueta(l.cor) + ';margin-right:7px"></i>' : '') +
+          esc(l.nome || '(etiqueta ' + (l.cor || 'sem nome') + ')') + '</div>' +
+        '<div class="col-num">' + l.feitos + '/' + l.total + '</div></div>' +
+        '<div class="bar"><i data-w="' + pct + '"></i></div>' +
+      '</button>';
+    }).join('');
+  }
+  h += '</div>';
+
+  if (semEtq){
+    h += '<button class="btn ghost" data-etq="__sem__">' + plural(semEtq,'cartão sem etiqueta','cartões sem etiqueta') + '</button>';
+  }
+  $('#tab-etiquetas').innerHTML = h;
+  requestAnimationFrame(() => $$('#tab-etiquetas .bar i').forEach(i => i.style.width = i.dataset.w + '%'));
+}
+
+function renderSobre(){
+  const d = S.dados, q = d.quadro;
+  const linhas = [
+    ['Quadro', q.name || '—'],
+    ['ID', idAtual()],
+    ['Etapas', d.listas.length],
+    ['Cartões abertos', d.total],
+    ['Etiquetas', d.etiquetas.length],
+    ['Campos personalizados', d.campos.length],
+    ['Última atividade', q.dateLastActivity ? dataBR(q.dateLastActivity) : '—'],
+  ];
+  let h = '';
+
+  if (q.desc){
+    h += '<div class="card"><div class="card-head"><div class="card-title">Descrição do quadro</div></div>' +
+         '<div class="prose">' + md(q.desc) + '</div></div>';
+  }
+
+  h += '<div class="card"><div class="card-head"><div class="card-title">Dados do quadro</div></div>' +
+       linhas.map(l => '<div class="kv"><b>' + esc(l[0]) + '</b><span>' + esc(l[1]) + '</span></div>').join('') +
+       '</div>';
+
+  const regras = [
+    'o prazo está marcado como cumprido no Trello',
+    'todos os itens das suas checklists estão marcados',
+  ];
+  const cols = d.listas.filter(l => d.colunasFeitas.has(l.id)).map(l => l.nome);
+  const etqs = d.etiquetas.filter(l => d.etiquetasFeitas.has(l.id)).map(l => l.nome);
+  if (cols.length) regras.push('ele está numa coluna de encerramento detectada pelo nome (<strong>' + esc(cols.join(', ')) + '</strong>)');
+  if (etqs.length) regras.push('ele tem uma etiqueta de encerramento detectada pelo nome (<strong>' + esc(etqs.join(', ')) + '</strong>)');
+  h += '<div class="card"><div class="card-head"><div class="card-title">Como o progresso é calculado</div></div>' +
+    '<div class="prose"><p>Um cartão conta como <strong>concluído</strong> quando qualquer uma destas condições é verdadeira:</p>' +
+    '<ul>' + regras.map(r => '<li>' + r + '</li>').join('') + '</ul>' +
+    '<p>Nada mais é presumido: colunas, etiquetas e descrições são lidas exatamente como estão no quadro.</p></div></div>';
+
+  h += '<div class="card"><div class="card-head"><div class="card-title">Trocar de quadro</div></div>' +
+    '<div class="field"><input id="troca-input" type="text" value="' + esc(idAtual()) + '" placeholder="ID ou link do quadro" autocapitalize="off" autocorrect="off" spellcheck="false">' +
+    '<button id="troca-go">Abrir</button></div>' +
+    '<div class="prose" style="margin-top:10px;font-size:12.5px">Isso abre o painel com outro quadro sem alterar o código. ' +
+    'Para fixar de vez, edite a constante <code>PROJETO</code> no topo do arquivo.</div></div>';
+
+  if (q.shortUrl || q.url){
+    h += '<a class="btn ghost" href="' + esc(q.shortUrl || q.url) + '" target="_blank" rel="noopener">Abrir quadro no Trello</a>';
+  }
+  $('#tab-sobre').innerHTML = h;
+}
+
+function renderDetalhe(){
+  renderChips();
+  if (S.tab === 'quadro')    renderQuadro();
+  if (S.tab === 'prazos')    renderPrazos();
+  if (S.tab === 'etiquetas') renderEtiquetas();
+  if (S.tab === 'sobre')     renderSobre();
+}
+
+function renderTudo(){ renderResumo(); renderDetalhe(); }
+
+/* ═════════════ SHEET DO CARTÃO ═════════════ */
+function abrirCard(id){
+  const c = S.dados.cartoes.find(x => x.id === id);
+  if (!c) return;
+  const s = STATUS[c.status];
+
+  $('#sheet-eyebrow').innerHTML = esc(c.lista || 'Cartão') + ' &nbsp;·&nbsp; ' + s.rot;
+  $('#sheet-title').textContent = c.nome;
+
+  let h = '';
+  if (c.etiquetas.length){
+    h += '<div class="blk"><div class="blk-t">Etiquetas</div><div class="task-foot" style="margin:0">' +
+         c.etiquetas.map(chipEtiqueta).join('') + '</div></div>';
+  }
+
+  const kv = [];
+  kv.push(['Situação', s.rot]);
+  if (c.start) kv.push(['Início', dataBR(c.start)]);
+  if (c.due)   kv.push(['Prazo', dataBR(c.due) + (c.status === 'ok' ? '' : ' (' + textoPrazo(c.due) + ')')]);
+  if (!c.due)  kv.push(['Prazo', 'Não definido']);
+  if (c.lista) kv.push(['Etapa', c.lista]);
+  if (c.membros.length) kv.push(['Responsáveis', c.membros.join(', ')]);
+  if (c.chkTotal) kv.push(['Checklists', c.chkFeitos + ' de ' + c.chkTotal + ' itens']);
+  if (c.anexos) kv.push(['Anexos', String(c.anexos)]);
+  if (c.comentarios) kv.push(['Comentários', String(c.comentarios)]);
+  c.campos.forEach(f => kv.push([f.nome, f.valor]));
+
+  h += '<div class="blk"><div class="blk-t">Informações</div>' +
+       kv.map(r => '<div class="kv"><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div>').join('') + '</div>';
+
+  if (c.desc){
+    h += '<div class="blk"><div class="blk-t">Descrição</div><div class="prose">' + md(c.desc) + '</div></div>';
+  }
+
+  if (c.checklists.length){
+    h += '<div class="blk"><div class="blk-t">Checklists</div>' + c.checklists.map(cl => {
+      const f = cl.itens.filter(i => i.feito).length;
+      return '<div class="chk"><div class="chk-h"><div>' + esc(cl.nome) + '</div><span>' + f + '/' + cl.itens.length + '</span></div>' +
+        cl.itens.map(i => '<div class="chk-i ' + (i.feito ? 'done' : '') + '"><i></i><span>' + esc(i.nome) + '</span></div>').join('') +
+      '</div>';
+    }).join('') + '</div>';
+  }
+
+  if (c.url){
+    h += '<a class="btn ghost" href="' + esc(c.url) + '" target="_blank" rel="noopener" style="margin:0">Abrir cartão no Trello</a>';
+  }
+
+  $('#sheet-body').innerHTML = h;
+  $('#sheet-body').scrollTop = 0;
+  $('#sheet').classList.add('on');
+  $('#sheet-bg').classList.add('on');
+  document.body.style.overflow = 'hidden';
+  history.pushState({ sheet:1 }, '');
+}
+function fecharCard(voltar){
+  if (!$('#sheet').classList.contains('on')) return;
+  $('#sheet').classList.remove('on');
+  $('#sheet-bg').classList.remove('on');
+  document.body.style.overflow = '';
+  if (voltar !== false && history.state && history.state.sheet) history.back();
+}
+
+/* ═════════════ NAVEGAÇÃO ═════════════ */
+function irPara(v){
+  S.view = v;
+  $('#view-resumo').classList.toggle('on', v === 'resumo');
+  $('#view-detalhe').classList.toggle('on', v === 'detalhe');
+  $$('[data-goto]').forEach(b => b.setAttribute('aria-current', String(b.dataset.goto === v)));
+  window.scrollTo(0, 0);
+}
+function irTab(t){
+  S.tab = t;
+  $$('#seg button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
+  ['quadro','prazos','etiquetas','sobre'].forEach(k => $('#tab-' + k).hidden = (k !== t));
+  renderDetalhe();
+}
+
+/* ═════════════ EVENTOS ═════════════ */
 document.addEventListener('click', e => {
-  const h = e.target.closest('.deliv-head');
-  if (!h) return;
-  const art = h.closest('.deliv');
-  const aberto = art.classList.toggle('open');
-  h.setAttribute('aria-expanded', String(aberto));
+  const t = e.target;
+
+  const nav = t.closest('[data-goto]');
+  if (nav) return irPara(nav.dataset.goto);
+
+  const tab = t.closest('#seg button');
+  if (tab) return irTab(tab.dataset.tab);
+
+  const card = t.closest('[data-card]');
+  if (card) return abrirCard(card.dataset.card);
+
+  const acc = t.closest('[data-toggle]');
+  if (acc){
+    const sec = acc.closest('.acc');
+    sec.classList.toggle('open');
+    if (sec.classList.contains('open')) S.abertas.add(acc.dataset.toggle);
+    else S.abertas.delete(acc.dataset.toggle);
+    const b = sec.querySelector('.acc-bar i');
+    if (b) requestAnimationFrame(() => b.style.width = b.dataset.w + '%');
+    return;
+  }
+
+  const chip = t.closest('[data-filtro]');
+  if (chip){ S.filtro = chip.dataset.filtro; return renderDetalhe(); }
+
+  if (t.closest('[data-limpar-etq]')){ S.etiqueta = null; return renderDetalhe(); }
+
+  const etq = t.closest('[data-etq]');
+  if (etq){ S.etiqueta = etq.dataset.etq; irTab('quadro'); return; }
+
+  if (t.closest('#sheet-bg')) return fecharCard();
+  if (t.closest('#btn-detalhe')) return irPara('detalhe');
+  if (t.closest('#link-prazos')){ irPara('detalhe'); return irTab('prazos'); }
+
+  if (t.closest('#troca-go')){
+    const v = extrairId($('#troca-input').value);
+    if (v) location.search = '?p=' + v;
+    return;
+  }
+  if (t.closest('#fail-go')){
+    const v = extrairId($('#fail-input').value);
+    if (v) location.search = '?p=' + v;
+    return;
+  }
+  if (t.closest('#btn-reload')){
+    $('#btn-reload').classList.add('spin');
+    return carregar().finally(() => $('#btn-reload').classList.remove('spin'));
+  }
 });
 
-/* ── Barra de progresso de leitura ── */
-const barraLeitura = $('#scrollbar');
-function progresso(){
-  const alcance = document.documentElement.scrollHeight - window.innerHeight;
-  const p = alcance > 0 ? (window.scrollY / alcance) * 100 : 0;
-  barraLeitura.style.width = Math.min(100, Math.max(0, p)) + '%';
-}
-window.addEventListener('scroll', progresso, { passive:true });
-window.addEventListener('resize', progresso);
-progresso();
+$('#q').addEventListener('input', e => {
+  S.q = e.target.value;
+  $('#q-clear').classList.toggle('on', !!S.q);
+  clearTimeout($('#q')._t);
+  $('#q')._t = setTimeout(renderDetalhe, 160);
+});
+$('#q-clear').addEventListener('click', () => {
+  $('#q').value = ''; S.q = ''; $('#q-clear').classList.remove('on'); renderDetalhe();
+});
+$('#fail-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('#fail-go').click(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharCard(); });
+window.addEventListener('popstate', () => fecharCard(false));
 
-/* ── Reveal on scroll ── */
-const revelar = new IntersectionObserver(entradas => {
-  entradas.forEach(en => { if (en.isIntersecting){ en.target.classList.add('in'); revelar.unobserve(en.target); } });
-}, { threshold:0.1, rootMargin:'0px 0px -40px 0px' });
-document.querySelectorAll('.rv').forEach(el => revelar.observe(el));
-
-/* ── Nav ativa conforme a seção ── */
-const links = Array.from(document.querySelectorAll('#nav-links a'));
-const secoes = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-const espiao = new IntersectionObserver(entradas => {
-  entradas.forEach(en => {
-    if (!en.isIntersecting) return;
-    links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id));
-  });
-}, { rootMargin:'-45% 0px -50% 0px' });
-secoes.forEach(s => espiao.observe(s));
+/* ═════════════ INÍCIO ═════════════ */
+carregar().then(() => {
+  if (CONFIG.recarregarACada > 0){
+    setInterval(() => { if (!$('#sheet').classList.contains('on')) carregar(); }, CONFIG.recarregarACada * 1000);
+  }
+});
 </script>
 </body>
 </html>
